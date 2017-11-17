@@ -1,3 +1,4 @@
 fun main(args : Array<String>) {
-    println("Hello FlexNet")
+    val flexNet = FlexNet(FlexNetConfig(1,1))
+    flexNet.print()
 }
