@@ -1,12 +1,16 @@
-class Layer (size: Int, neuronsThetaCount: Int) {
+class Layer (size: Int, thetasPerNeuron: Int) {
 
     private val neurons : List<Neuron>
     val activations = mutableListOf<Double>()
 
+    constructor(inputs: List<Double>) : this(inputs.size, 0) {
+        activations.addAll(inputs)
+    }
+
     init {
         val init_neurons = mutableListOf<Neuron>()
         for (index in 1..size) {
-            init_neurons.add(Neuron(neuronsThetaCount))
+            init_neurons.add(Neuron(thetasPerNeuron))
         }
         neurons = init_neurons.toList()
     }
@@ -21,10 +25,12 @@ class Layer (size: Int, neuronsThetaCount: Int) {
         append("Layer{ size = ${neurons.size}, ")
 
         if (activations.isEmpty())
-            append("No activations, ")
+            append("No activations ")
         else
             append("Activations ${activations.joinToString()}")
 
+
+        append(", ")
         neurons.forEach { append(it) ; append(" ") }
         append("}")
     }

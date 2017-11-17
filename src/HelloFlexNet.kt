@@ -7,4 +7,9 @@ fun main(args : Array<String>) {
     )
     val flexNet = FlexNet(config)
     flexNet.print()
+
+    println("\nPropagate!")
+    flexNet.propagate(listOf(1.0))
+
+    flexNet.print()
 }

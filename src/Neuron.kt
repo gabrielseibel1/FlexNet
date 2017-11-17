@@ -5,9 +5,9 @@ class Neuron (thetaCount: Int){
     private val thetas : MutableList<Double> = mutableListOf()
 
     init {
-        //initialize thetas with 0
+        //TODO initialize thetas randomly
         for (index in 1..thetaCount) {
-            thetas.add(0.0)
+            thetas.add((1..20).random().toDouble()/10)
         }
     }
 
@@ -19,9 +19,13 @@ class Neuron (thetaCount: Int){
         return sum
     }
 
+    private fun sigmoid(x: Double) : Nothing = TODO("Implement sigmoid function to use in activate()")
+
     override fun toString(): String = buildString {
         append("Neuron{ thetas: ")
         append(thetas.joinToString())
         append(" }")
     }
 }
+
+fun ClosedRange<Int>.random() = start + Random().nextInt(endInclusive - start)
