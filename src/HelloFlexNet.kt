@@ -1,9 +1,9 @@
 fun main(args : Array<String>) {
     val config = FlexNetConfig(
-            hiddenLayers = 1,
-            neuronsPerHiddenLayer = 3,
-            inputNeurons = 1,
-            outputNeurons = 1
+            inputNeurons = 2,
+            outputNeurons = 1,
+            hiddenLayers = 2,
+            neuronsPerHiddenLayer = 3
     )
     val flexNet = FlexNet(config)
     flexNet.print()

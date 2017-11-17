@@ -1,13 +1,14 @@
 class FlexNet (val config : FlexNetConfig) {
 
-    private val inputLayer : Layer = Layer(config.inputNeurons)
+    private val inputLayer : Layer = Layer(config.inputNeurons, 0)
+    private val outputLayer : Layer = Layer(config.outputNeurons, config.neuronsPerHiddenLayer)
     private val hiddenLayers : List<Layer>
-    private val outputLayer : Layer = Layer(config.outputNeurons)
 
     init {
         val init_layers = mutableListOf<Layer>()
         for (index in 1..config.hiddenLayers) {
-            init_layers.add(Layer(config.neuronsPerHiddenLayer))
+            val neuronsThetaCount = if (index == 1) config.inputNeurons else config.neuronsPerHiddenLayer
+            init_layers.add(Layer(config.neuronsPerHiddenLayer, neuronsThetaCount))
         }
         hiddenLayers= init_layers.toList()
     }

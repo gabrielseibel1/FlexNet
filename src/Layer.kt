@@ -1,4 +1,4 @@
-class Layer (size: Int) {
+class Layer (size: Int, neuronsThetaCount: Int) {
 
     private val neurons : List<Neuron>
     val activations = mutableListOf<Double>()
@@ -6,7 +6,7 @@ class Layer (size: Int) {
     init {
         val init_neurons = mutableListOf<Neuron>()
         for (index in 1..size) {
-            init_neurons.add(Neuron())
+            init_neurons.add(Neuron(neuronsThetaCount))
         }
         neurons = init_neurons.toList()
     }
@@ -25,7 +25,7 @@ class Layer (size: Int) {
         else
             append("Activations ${activations.joinToString()}")
 
-        neurons.forEach { append(it) }
+        neurons.forEach { append(it) ; append(" ") }
         append("}")
     }
 }

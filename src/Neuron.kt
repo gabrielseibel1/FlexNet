@@ -1,10 +1,14 @@
-class Neuron {
+import java.util.*
+
+class Neuron (thetaCount: Int){
 
     private val thetas : MutableList<Double> = mutableListOf()
 
     init {
-        //TODO init thetas aleatoriamente
-
+        //initialize thetas with 0
+        for (index in 1..thetaCount) {
+            thetas.add(0.0)
+        }
     }
 
     fun activate(previousLayer : Layer) : Double {
@@ -16,7 +20,8 @@ class Neuron {
     }
 
     override fun toString(): String = buildString {
-        append("Neuron()")
+        append("Neuron{ thetas: ")
+        append(thetas.joinToString())
+        append(" }")
     }
 }
-
