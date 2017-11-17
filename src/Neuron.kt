@@ -5,7 +5,6 @@ class Neuron (thetaCount: Int){
     private val thetas : MutableList<Double> = mutableListOf()
 
     init {
-        //TODO initialize thetas randomly
         for (index in 1..thetaCount) {
             thetas.add((1..20).random().toDouble()/10)
         }
