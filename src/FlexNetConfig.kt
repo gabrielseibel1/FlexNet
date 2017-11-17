@@ -1,1 +1,6 @@
-data class FlexNetConfig (val layers : Int, val neurons : Int)
+data class FlexNetConfig (
+        val hiddenLayers : Int,
+        val neuronsPerHiddenLayer : Int,
+        val inputNeurons : Int,
+        val outputNeurons : Int
+)
