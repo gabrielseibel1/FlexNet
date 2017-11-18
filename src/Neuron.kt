@@ -1,5 +1,4 @@
 import java.util.*
-import kotlin.math.exp
 
 class Neuron (thetaCount: Int){
 
@@ -19,7 +18,7 @@ class Neuron (thetaCount: Int){
         return sigmoid(sum)
     }
 
-    private fun sigmoid(x: Double) : Double = 1 / (1 + exp(-x))
+    private fun sigmoid(x: Double) : Double = 1 / (1 + Math.exp(-x))
 
     override fun toString(): String = buildString {
         append("Neuron{ thetas: ${thetas.joinToString(prefix = "{", postfix = "}")} } ")
