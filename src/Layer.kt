@@ -3,16 +3,12 @@ class Layer (size: Int, thetasPerNeuron: Int) {
     private val neurons : List<Neuron>
     val activations = mutableListOf<Double>()
 
-    constructor(inputs: List<Double>) : this(inputs.size, 0) {
-        activations.addAll(inputs)
-    }
-
     init {
-        val init_neurons = mutableListOf<Neuron>()
+        val initNeurons = mutableListOf<Neuron>()
         for (index in 1..size) {
-            init_neurons.add(Neuron(thetasPerNeuron))
+            initNeurons.add(Neuron(thetasPerNeuron))
         }
-        neurons = init_neurons.toList()
+        neurons = initNeurons.toList()
     }
 
     fun activate (previousLayer: Layer): List<Double> {
@@ -21,13 +17,20 @@ class Layer (size: Int, thetasPerNeuron: Int) {
         return activations
     }
 
+    fun readInput(inputs: List<Double>) {
+        if (inputs.size != neurons.size)
+            throw Exception("Invalid inputs! Expected size ${neurons.size} but got ${inputs.size}")
+        activations.clear()
+        activations.addAll(inputs)
+    }
+
     override fun toString(): String = buildString {
         append("Layer{ size = ${neurons.size}, ")
 
         if (activations.isEmpty())
             append("No activations ")
         else
-            append("Activations ${activations.joinToString()}")
+            append("Activations ${activations.joinToString(prefix = "{", postfix = "}")}")
 
 
         append(", ")

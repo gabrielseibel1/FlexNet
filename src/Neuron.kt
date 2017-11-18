@@ -21,9 +21,7 @@ class Neuron (thetaCount: Int){
     private fun sigmoid(x: Double) : Nothing = TODO("Implement sigmoid function to use in activate()")
 
     override fun toString(): String = buildString {
-        append("Neuron{ thetas: ")
-        append(thetas.joinToString())
-        append(" }")
+        append("Neuron{ thetas: ${thetas.joinToString(prefix = "{", postfix = "}")}")
     }
 }
 

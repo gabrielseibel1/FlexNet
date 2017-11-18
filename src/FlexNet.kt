@@ -5,12 +5,12 @@ class FlexNet (val config : FlexNetConfig) {
     private val hiddenLayers : List<Layer>
 
     init {
-        val init_layers = mutableListOf<Layer>()
+        val initLayers = mutableListOf<Layer>()
         for (index in 1..config.hiddenLayers) {
             val neuronsThetaCount = if (index == 1) config.inputNeurons else config.neuronsPerHiddenLayer
-            init_layers.add(Layer(config.neuronsPerHiddenLayer, neuronsThetaCount))
+            initLayers.add(Layer(config.neuronsPerHiddenLayer, neuronsThetaCount))
         }
-        hiddenLayers= init_layers.toList()
+        hiddenLayers= initLayers.toList()
     }
 
     fun propagate(inputs: List<Double>) {
@@ -20,11 +20,11 @@ class FlexNet (val config : FlexNetConfig) {
             it.activate(previousLayer)
             previousLayer = it
         }
+        outputLayer.activate(hiddenLayers.last())
     }
 
     private fun activateInputLayer(inputs: List<Double>) {
-        //TODO change to input reading
-        inputLayer.activate(Layer(inputs))
+        inputLayer.readInput(inputs)
     }
 
     fun print() {
@@ -36,8 +36,4 @@ class FlexNet (val config : FlexNetConfig) {
         println("Output layer:")
         println(outputLayer)
     }
-}
-
-fun main(args : Array<String>) {
-
 }
