@@ -1,0 +1,1 @@
+data class Instance (val attributes: List<Double>)

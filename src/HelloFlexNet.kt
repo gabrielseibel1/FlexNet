@@ -3,7 +3,8 @@ fun main(args : Array<String>) {
             inputNeurons = 1,
             outputNeurons = 1,
             hiddenLayers = 2,
-            neuronsPerHiddenLayer = 3
+            neuronsPerHiddenLayer = 3,
+            lambda = 0
     )
     val flexNet = FlexNet(config)
     flexNet.print()
