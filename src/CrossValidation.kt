@@ -1,13 +1,14 @@
 class CrossValidation (val dataFile : String, val k : Int, val config : FlexNetConfig) {
 
-    val dr = DataReader(dataFile)
-    val folding = Folding(dr.getDataSet(), k)
-    val flexNet = FlexNet(config)
+    private val dr = DataReader(dataFile)
+    private val folding = Folding(dr.getTrainingDataSet(), k)
+    private val flexNet = FlexNet(config)
 
     init {
     }
 
     fun doCrossValidation() {
+        println(folding.folds)
         for (foldTest in 1..k) {
             for(foldPropagate in 1..k) {
                 if(foldPropagate != foldTest) {
@@ -17,19 +18,10 @@ class CrossValidation (val dataFile : String, val k : Int, val config : FlexNetC
         }
     }
 
-    private fun trainNet(fold : MutableList<List<String>>) {
+    private fun trainNet(fold : MutableList<List<Double>>) {
         for (instance in fold) {
-            flexNet.propagate(convertToListDouble(instance))
-            flexNet.print()
+            flexNet.propagate(instance)
         }
-    }
-
-    private fun convertToListDouble(instance : List<String>) : List<Double> {
-        val instanceConverted : MutableList<Double> = mutableListOf()
-        instance.forEach {
-            data -> instanceConverted.add(data.toDouble())
-        }
-        return instanceConverted.toList();
     }
 }
 

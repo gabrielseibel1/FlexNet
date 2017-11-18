@@ -1,6 +1,6 @@
-class Folding (val dataSet : MutableList<List<String>>, val k : Int) {
+class Folding (val dataSet : MutableList<List<Double>>, val k : Int) {
 
-    val folds : MutableList<MutableList<List<String>>> = mutableListOf()
+    val folds : MutableList<MutableList<List<Double>>> = mutableListOf()
     val numberOfSets : Int = dataSet.count()
     var lastIndex : Int = 0
 
@@ -16,7 +16,7 @@ class Folding (val dataSet : MutableList<List<String>>, val k : Int) {
         }
     }
 
-    private fun getIntervalsOfSets(i : Int, extra : Int) : MutableList<List<String>> {
+    private fun getIntervalsOfSets(i : Int, extra : Int) : MutableList<List<Double>> {
         return if(extra > 0) {
             val fromIndex = lastIndex
             val toIndex = fromIndex+Math.floor(getNumberOfElementsInFold()).toInt()+1
@@ -42,7 +42,7 @@ class Folding (val dataSet : MutableList<List<String>>, val k : Int) {
 
 fun main(args : Array<String>) {
     val dr = DataReader("./data/haberman.data")
-    val cv = Folding(dr.getDataSet(), 10)
+    val cv = Folding(dr.getTrainingDataSet(), 10)
     println(cv.folds[0])
     println(cv.folds[1])
     println(cv.folds[2])
