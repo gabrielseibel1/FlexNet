@@ -1,6 +1,6 @@
 fun main(args : Array<String>) {
     val config = FlexNetConfig(
-            inputNeurons = 2,
+            inputNeurons = 1,
             outputNeurons = 1,
             hiddenLayers = 2,
             neuronsPerHiddenLayer = 3
@@ -9,7 +9,7 @@ fun main(args : Array<String>) {
     flexNet.print()
 
     println("\nPropagate!")
-    flexNet.propagate(listOf(1.0))
+    flexNet.propagate(listOf(0.5))
 
     flexNet.print()
 }

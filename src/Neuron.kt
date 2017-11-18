@@ -1,4 +1,5 @@
 import java.util.*
+import kotlin.math.exp
 
 class Neuron (thetaCount: Int){
 
@@ -15,13 +16,13 @@ class Neuron (thetaCount: Int){
         previousLayer.activations.forEachIndexed {
             index, activation -> sum += thetas[index] * activation
         }
-        return sum
+        return sigmoid(sum)
     }
 
-    private fun sigmoid(x: Double) : Nothing = TODO("Implement sigmoid function to use in activate()")
+    private fun sigmoid(x: Double) : Double = 1 / (1 + exp(-x))
 
     override fun toString(): String = buildString {
-        append("Neuron{ thetas: ${thetas.joinToString(prefix = "{", postfix = "}")}")
+        append("Neuron{ thetas: ${thetas.joinToString(prefix = "{", postfix = "}")} } ")
     }
 }
 
