@@ -1,4 +1,4 @@
-class CrossValidation (val dataFile : String, val k : Int, val config : FlexNetConfig, val classIsFirst : Boolean) {
+class CrossValidation (dataFile : String, val k : Int, config : FlexNetConfig, val classIsFirst : Boolean) {
 
     private val dr = DataReader(dataFile)
     private val folding = Folding(dr.getTrainingDataSet(), k)
@@ -8,7 +8,7 @@ class CrossValidation (val dataFile : String, val k : Int, val config : FlexNetC
         for (foldTest in 1..k) {
             for (foldPropagate in 1..k) {
                 if(foldPropagate != foldTest) {
-                    trainer.train(folding.folds[foldPropagate-1])
+                    trainer.train(folding.folds[foldPropagate-1], classIsFirst)
                 }
             }
         }
