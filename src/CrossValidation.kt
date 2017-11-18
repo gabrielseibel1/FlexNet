@@ -19,8 +19,7 @@ class CrossValidation (val dataFile : String, val k : Int, val config : FlexNetC
 
     private fun trainNet(fold : MutableList<List<String>>) {
         for (instance in fold) {
-            println(listOf(1.0))
-            flexNet.propagate(listOf(1.0))
+            flexNet.propagate(convertToListDouble(instance))
             flexNet.print()
         }
     }
