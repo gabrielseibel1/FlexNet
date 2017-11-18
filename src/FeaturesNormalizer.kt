@@ -22,7 +22,8 @@ class FeaturesNormalizer () {
                 }
                 auxDataSet.forEachIndexed {
                     index, instance -> run {
-                        dataSetNormalized[index].add((instance[feature-1]-minValue)/(maxValue-minValue))
+                        if(feature != auxDataSet.count()) dataSetNormalized[index].add((instance[feature-1]-minValue)/(maxValue-minValue))
+                        else dataSetNormalized[index].add(instance[feature-1])
                     }
                 }
             }

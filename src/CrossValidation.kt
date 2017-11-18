@@ -2,13 +2,11 @@ class CrossValidation (val dataFile : String, val k : Int, val config : FlexNetC
 
     private val dr = DataReader(dataFile)
     private val folding = Folding(dr.getTrainingDataSet(), k)
-    private val flexNet = FlexNet(config)
 
     init {
     }
 
     fun doCrossValidation() {
-        println(folding.folds)
         for (foldTest in 1..k) {
             for(foldPropagate in 1..k) {
                 if(foldPropagate != foldTest) {
@@ -20,16 +18,19 @@ class CrossValidation (val dataFile : String, val k : Int, val config : FlexNetC
 
     private fun trainNet(fold : MutableList<List<Double>>) {
         for (instance in fold) {
-            flexNet.propagate(instance)
+            val flexNet = FlexNet(config)
+            println(instance)
+            flexNet.propagate(instance.subList(0, instance.count()-1))
+            flexNet.print()
         }
     }
 }
 
 fun main(args : Array<String>) {
     val config = FlexNetConfig(
-            inputNeurons = 4,
-            outputNeurons = 1,
-            hiddenLayers = 2,
+            inputNeurons = 3,
+            outputNeurons = 3,
+            hiddenLayers = 1,
             neuronsPerHiddenLayer = 3
     )
     val cv = CrossValidation("./data/haberman.data", 10, config)

@@ -21,7 +21,6 @@ class DataReader (val file : String) {
     private fun splitSetsToTrainAndTest() {
         val numberOfSets : Int = dataSetNormalized.count();
         val numberOfTrainingSets : Int = Math.floor(numberOfSets*0.8).toInt()
-        val numberOfTestSets : Int = numberOfSets-numberOfTrainingSets
         for(i in 1..numberOfSets) {
             if(i-1 < numberOfTrainingSets) {
                 trainingDataSet.add(dataSetNormalized[i-1])
