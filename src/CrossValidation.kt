@@ -1,17 +1,18 @@
-class CrossValidation (dataFile : String, val k : Int, config : FlexNetConfig, val targetPosition : Int) {
+class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfig, val targetPosition : Int) {
 
     private val dr = DataReader(dataFile, targetPosition)
     private val folding = Folding(dr.getTrainingDataSet(), k)
-    private val trainer = NetTrainer(FlexNet(config))
+    private val trainer = NetTrainer()
 
     fun doCrossValidation() {
+        var flexNet = FlexNet(config)
         for (foldTest in 1..k) {
             for (foldPropagate in 1..k) {
-                if(foldPropagate != foldTest) {
-                    trainer.train(folding.folds[foldPropagate-1])
+                if (foldPropagate != foldTest) {
+                    trainer.train(flexNet, folding.folds[foldPropagate-1])
                 }
             }
-            trainer.flexNet.calculateJ(folding.folds, foldTest)
+            flexNet.calculateJ(folding.folds, foldTest)
         }
     }
 }
