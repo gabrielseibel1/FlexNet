@@ -15,8 +15,7 @@ fun main(args: Array<String>) {
             inputNeurons = 1,
             numberOfTargetAttributeClassesInDataSet = 2,
             hiddenLayers = 5,
-            neuronsPerHiddenLayer = 3,
-            lambda = 0
+            neuronsPerHiddenLayer = 3
     )
     val flexNet = FlexNet(config)
     val netTrainer = NetTrainer(flexNet)

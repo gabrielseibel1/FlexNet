@@ -4,7 +4,7 @@ fun main(args : Array<String>) {
             numberOfTargetAttributeClassesInDataSet = 1,
             hiddenLayers = 2,
             neuronsPerHiddenLayer = 3,
-            lambda = 0
+            lambda = 0.0
     )
     val flexNet = FlexNet(config)
     flexNet.print()

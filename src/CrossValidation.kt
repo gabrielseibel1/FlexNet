@@ -21,7 +21,7 @@ fun main(args : Array<String>) {
             numberOfTargetAttributeClassesInDataSet = 13,
             hiddenLayers = 1,
             neuronsPerHiddenLayer = 4,
-            lambda = 0
+            lambda = 0.0
     )
     val cv = CrossValidation("./data/wine.data", 10, config, 3)
     cv.doCrossValidation()
