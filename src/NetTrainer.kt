@@ -2,7 +2,7 @@ class NetTrainer (val flexNet: FlexNet) {
 
     fun train(fold: Fold) {
         for (instance in fold.dataSet) {
-            //println(instance)
+            println(instance)
             println("\nForth and Back propagate...\n")
             flexNet.forthAndBackPropagate(instance)
             flexNet.print()

@@ -40,7 +40,7 @@ class FlexNet (private val config : FlexNetConfig) {
                             count++
                             val correctOutputs = buildCorrectOutputs(instance.targetAttributeNeuron)
                             for (output in 1..correctOutputs.count()) {
-                                JFunction += -correctOutputs[output-1]*(Math.log(outputLayer.neurons.last().activation))-(1-correctOutputs[output-1])*Math.log(1-outputLayer.neurons.last().activation)
+                                JFunction += -correctOutputs[output-1]*(Math.log(outputLayer.neurons[output-1].activation))-(1-correctOutputs[output-1])*Math.log(1-outputLayer.neurons[output-1].activation)
                             }
                         }
                     }
@@ -50,8 +50,9 @@ class FlexNet (private val config : FlexNetConfig) {
         JFunction = JFunction/count
         inputLayer.neurons.forEach {
             neuron -> run {
-                neuron.thetas.forEach {
-                    theta -> regularization += Math.pow(theta, 2.0)
+                neuron.thetas.forEachIndexed {
+                    index, theta ->
+                        if(index != inputLayer.neurons.lastIndex) regularization += Math.pow(theta, 2.0)
                 }
             }
         }
@@ -59,8 +60,8 @@ class FlexNet (private val config : FlexNetConfig) {
             layer -> run {
                 layer.neurons.forEach {
                     neuron -> run {
-                        neuron.thetas.forEach {
-                            theta -> regularization += Math.pow(theta, 2.0)
+                        neuron.thetas.forEachIndexed {
+                            index, theta -> if(index != layer.neurons.lastIndex) regularization += Math.pow(theta, 2.0)
                         }
                     }
                 }
@@ -68,8 +69,8 @@ class FlexNet (private val config : FlexNetConfig) {
         }
         outputLayer.neurons.forEach {
             neuron -> run {
-                neuron.thetas.forEach {
-                    theta -> regularization += Math.pow(theta, 2.0)
+                neuron.thetas.forEachIndexed {
+                    index, theta -> if(index != outputLayer.neurons.lastIndex) regularization += Math.pow(theta, 2.0)
                 }
             }
         }
