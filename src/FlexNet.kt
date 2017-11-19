@@ -30,7 +30,6 @@ class FlexNet (private val config : FlexNetConfig) {
 
     private fun backPropagate(correctOutput: Int) {
         val correctOutputs = buildCorrectOutputs(correctOutput)
-        println("Correct outputs $correctOutputs")
         var previousLayer = outputLayer
         outputLayer.calculateDeltasFromCorrectOutputs(correctOutputs)
         hiddenLayers.asReversed().forEach {
