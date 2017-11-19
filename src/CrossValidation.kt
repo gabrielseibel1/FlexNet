@@ -1,6 +1,6 @@
-class CrossValidation (dataFile : String, val k : Int, config : FlexNetConfig, val classIsFirst : Boolean) {
+class CrossValidation (dataFile : String, val k : Int, config : FlexNetConfig, val targetPosition : Int) {
 
-    private val dr = DataReader(dataFile)
+    private val dr = DataReader(dataFile, targetPosition)
     private val folding = Folding(dr.getTrainingDataSet(), k)
     private val trainer = NetTrainer(FlexNet(config))
 
@@ -8,7 +8,7 @@ class CrossValidation (dataFile : String, val k : Int, config : FlexNetConfig, v
         for (foldTest in 1..k) {
             for (foldPropagate in 1..k) {
                 if(foldPropagate != foldTest) {
-                    trainer.train(folding.folds[foldPropagate-1], classIsFirst)
+                    trainer.train(folding.folds[foldPropagate-1])
                 }
             }
         }
@@ -17,13 +17,13 @@ class CrossValidation (dataFile : String, val k : Int, config : FlexNetConfig, v
 
 fun main(args : Array<String>) {
     val config = FlexNetConfig(
-            inputNeurons = 9,
-            outputNeurons = 3,
+            inputNeurons = 13,
+            outputNeurons = 13,
             hiddenLayers = 1,
-            neuronsPerHiddenLayer = 3,
+            neuronsPerHiddenLayer = 4,
             lambda = 0
     )
-    val cv = CrossValidation("./data/cmc.data", 10, config, false)
+    val cv = CrossValidation("./data/wine.data", 10, config, 3)
     cv.doCrossValidation()
     println("ok")
 }

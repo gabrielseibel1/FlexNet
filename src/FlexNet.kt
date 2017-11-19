@@ -15,7 +15,7 @@ class FlexNet (val config : FlexNetConfig) {
 
     fun propagateAndBackPropagate(instance: Instance) {
         propagate(instance.attributes)
-        backPropagate(instance.targetAttribute)
+        backPropagate(instance.targetAttributeNeuron)
     }
 
     fun propagate(inputs: List<Double>) {

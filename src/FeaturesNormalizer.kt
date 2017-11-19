@@ -1,50 +1,78 @@
-class FeaturesNormalizer () {
-    companion object {
-        fun normalizeFeatures(dataSet : MutableList<List<String>>) : Collection<List<Double>> {
-            var auxDataSet : MutableList<List<Double>> = mutableListOf()
-            var dataSetNormalized : MutableList<MutableList<Double>> = mutableListOf()
-            auxDataSet = convertToMutableListDouble(dataSet)
-            for(i in 1..auxDataSet.count()) {
-                dataSetNormalized.add(mutableListOf())
-            }
-            for(feature in 1..auxDataSet[0].count()) {
-                var maxValue : Double = Double.MIN_VALUE
-                var minValue : Double = Double.MAX_VALUE
-                auxDataSet.forEach {
-                    instance -> run {
-                        if(instance[feature-1] > maxValue) {
-                            maxValue = instance[feature-1]
-                        }
-                        if(instance[feature-1] < minValue) {
-                            minValue = instance[feature-1]
-                        }
-                    }
-                }
-                auxDataSet.forEachIndexed {
-                    index, instance -> run {
-                        if(feature != auxDataSet.count()) dataSetNormalized[index].add((instance[feature-1]-minValue)/(maxValue-minValue))
-                        else dataSetNormalized[index].add(instance[feature-1])
-                    }
-                }
-            }
-            return dataSetNormalized
+class FeaturesNormalizer (private val targetPosition : Int) {
+
+    private val targetAttributesKnown : MapOfTargetAttributes = MapOfTargetAttributes(targetAttributesKnown = mutableMapOf())
+
+    fun normalizeFeatures(dataSet : MutableList<List<String>>) : Collection<Instance> {
+
+        var auxDataSet : MutableList<Instance> = mutableListOf()
+        val dataSetNormalized : MutableList<Instance> = mutableListOf()
+
+        auxDataSet = convertToMutableInstance(dataSet)
+
+        for(i in 1..auxDataSet.count()) {
+            dataSetNormalized.add(Instance(
+                                    attributes = mutableListOf(),
+                                    targetAttribute = "",
+                                    targetAttributeNeuron = 0
+                                ))
         }
 
-        fun convertToMutableListDouble(dataSet : MutableList<List<String>>) : MutableList<List<Double>> {
-            val instanceConverted : MutableList<List<Double>> = mutableListOf()
-            dataSet.forEach {
-                data -> instanceConverted.add(convertToListDouble(data))
+        for(feature in 1..auxDataSet[0].attributes.count()) {
+
+            var maxValue : Double = Double.MIN_VALUE
+            var minValue : Double = Double.MAX_VALUE
+
+            auxDataSet.forEach {
+                instance -> run {
+                    if(instance.attributes[feature-1] > maxValue) {
+                        maxValue = instance.attributes[feature-1]
+                    }
+                    if(instance.attributes[feature-1] < minValue) {
+                        minValue = instance.attributes[feature-1]
+                    }
+                }
             }
-            return instanceConverted;
+
+            auxDataSet.forEachIndexed {
+                index, instance -> run {
+                    dataSetNormalized[index].targetAttributeNeuron = targetAttributesKnown.insertTargetAttribute(instance.targetAttribute)!!
+                    dataSetNormalized[index].targetAttribute = instance.targetAttribute
+                    dataSetNormalized[index].attributes.add((instance.attributes[feature-1]-minValue)/(maxValue-minValue))
+                }
+            }
+
         }
 
-        fun convertToListDouble(instance : List<String>) : List<Double> {
-            val instanceConverted : MutableList<Double> = mutableListOf()
-            instance.forEach {
-                data -> instanceConverted.add(data.toDouble())
-            }
-            return instanceConverted.toList();
+        return dataSetNormalized
+    }
+
+    private fun convertToMutableInstance(dataSet : MutableList<List<String>>) : MutableList<Instance> {
+
+        val instanceConverted : MutableList<Instance> = mutableListOf()
+
+        dataSet.forEach {
+            data -> instanceConverted.add(convertToListDouble(data))
         }
+
+        return instanceConverted
+    }
+
+    private fun convertToListDouble(instance : List<String>) : Instance {
+
+        val instanceConverted = Instance(
+                attributes = mutableListOf(),
+                targetAttribute = "",
+                targetAttributeNeuron = 0
+        )
+
+        instance.forEachIndexed {
+            index, data -> run {
+                if(index == targetPosition) instanceConverted.targetAttribute = data
+                else instanceConverted.attributes.add(data.toDouble())
+            }
+        }
+
+        return instanceConverted
     }
 }
 
