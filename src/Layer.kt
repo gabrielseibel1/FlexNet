@@ -28,8 +28,8 @@ class Layer (size: Int, thetasPerNeuron: Int) {
         neurons.forEachIndexed{ index, neuron ->  neuron.calculateDelta(nextLayer, index) }
     }
 
-    fun updateThetas(previousLayer: Layer, alpha: Double) {
-        neurons.forEach{ it.updateThetas(previousLayer, alpha) }
+    fun updateThetas(previousLayer: Layer, alpha: Double, lambda: Double) {
+        neurons.forEach{ it.updateThetas(previousLayer, alpha, lambda) }
     }
 
     override fun toString(): String = buildString {

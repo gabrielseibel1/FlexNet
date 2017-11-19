@@ -31,6 +31,7 @@ class FlexNet (private val config : FlexNetConfig) {
 
     fun calculateJ(folds: MutableList<Fold>, foldTest : Int) {
         var count = 0
+        var regularization = 0.0
         folds.forEachIndexed {
             index, fold -> run {
                 if(index != foldTest-1) {
@@ -47,6 +48,33 @@ class FlexNet (private val config : FlexNetConfig) {
             }
         }
         JFunction = JFunction/count
+        inputLayer.neurons.forEach {
+            neuron -> run {
+                neuron.thetas.forEach {
+                    theta -> regularization += Math.pow(theta, 2.0)
+                }
+            }
+        }
+        hiddenLayers.forEach {
+            layer -> run {
+                layer.neurons.forEach {
+                    neuron -> run {
+                        neuron.thetas.forEach {
+                            theta -> regularization += Math.pow(theta, 2.0)
+                        }
+                    }
+                }
+            }
+        }
+        outputLayer.neurons.forEach {
+            neuron -> run {
+                neuron.thetas.forEach {
+                    theta -> regularization += Math.pow(theta, 2.0)
+                }
+            }
+        }
+        regularization = (regularization*config.lambda)/(2*count)
+        JFunction += regularization
         println(count)
         println(JFunction)
     }
@@ -79,10 +107,10 @@ class FlexNet (private val config : FlexNetConfig) {
     fun updateThetas() {
         var previousLayer = inputLayer
         hiddenLayers.forEach {
-            it.updateThetas(previousLayer, config.alpha)
+            it.updateThetas(previousLayer, config.alpha, config.lambda)
             previousLayer = it
         }
-        outputLayer.updateThetas(previousLayer, config.alpha)
+        outputLayer.updateThetas(previousLayer, config.alpha, config.lambda)
     }
 
     private fun buildCorrectOutputs(correctOutput: Int) : List<Int> {

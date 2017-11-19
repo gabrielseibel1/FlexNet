@@ -5,6 +5,7 @@ class Neuron (thetaCount: Int){
     val thetas : MutableList<Double> = mutableListOf()
     var activation: Double = 0.0
     var delta: Double = 0.0
+    var lambda: Double = 0.0
 
     init {
         //thetas random initialization
@@ -35,9 +36,9 @@ class Neuron (thetaCount: Int){
         delta = sum * activation * (1 - activation)
     }
 
-    fun updateThetas(previousLayer: Layer, alpha: Double) {
+    fun updateThetas(previousLayer: Layer, alpha: Double, lambda: Double) {
         previousLayer.neurons.forEachIndexed { index, neuron ->
-            thetas[index] = thetas[index] - alpha * (neuron.activation * delta)
+            thetas[index] = thetas[index] - alpha * ((neuron.activation * delta) + lambda*thetas[index])
         }
     }
 
