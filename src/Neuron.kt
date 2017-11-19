@@ -2,7 +2,7 @@ import java.util.*
 
 class Neuron (thetaCount: Int){
 
-    private val thetas : MutableList<Double> = mutableListOf()
+    val thetas : MutableList<Double> = mutableListOf()
     var activation: Double = 0.0
     var delta: Double = 0.0
 

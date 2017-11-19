@@ -1,14 +1,14 @@
-class NetTrainer (private val flexNet: FlexNet) {
+class NetTrainer (val flexNet: FlexNet) {
 
     fun train(fold: Fold) {
         for (instance in fold.dataSet) {
-            println(instance)
-            println("\nForth and Back propagate...\n")
+            //println(instance)
+            //println("\nForth and Back propagate...\n")
             flexNet.forthAndBackPropagate(instance)
-            flexNet.print()
-            println("\nUpdating thetas...\n")
+            //flexNet.print()
+            //println("\nUpdating thetas...\n")
             flexNet.updateThetas()
-            flexNet.print()
+            //flexNet.print()
         }
     }
 }

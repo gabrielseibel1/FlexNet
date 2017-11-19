@@ -3,6 +3,9 @@ class FlexNet (private val config : FlexNetConfig) {
     private val inputLayer : Layer = Layer(config.inputNeurons, 1)
     private val outputLayer : Layer = Layer(config.numberOfTargetAttributeClassesInDataSet, config.neuronsPerHiddenLayer)
     private val hiddenLayers : List<Layer>
+    private var numberOfNetThetas : Int = 0
+    private var JFunction : Double = 0.0
+
 
     init {
         val initLayers = mutableListOf<Layer>()
@@ -11,6 +14,41 @@ class FlexNet (private val config : FlexNetConfig) {
             initLayers.add(Layer(config.neuronsPerHiddenLayer, neuronsThetaCount))
         }
         hiddenLayers= initLayers.toList()
+        calculateNumberOfNetThetas()
+    }
+
+    private fun calculateNumberOfNetThetas() {
+        for (neuron in inputLayer.neurons) {
+            numberOfNetThetas+=neuron.thetas.count()
+        }
+        for (neuron in outputLayer.neurons) {
+            numberOfNetThetas+=neuron.thetas.count()
+        }
+        hiddenLayers
+                .flatMap { it.neurons }
+                .forEach { numberOfNetThetas+= it.thetas.count() }
+    }
+
+    fun calculateJ(folds: MutableList<Fold>, foldTest : Int) {
+        var count = 0
+        folds.forEachIndexed {
+            index, fold -> run {
+                if(index != foldTest-1) {
+                    fold.dataSet.forEach {
+                        instance -> run {
+                            count++
+                            val correctOutputs = buildCorrectOutputs(instance.targetAttributeNeuron)
+                            for (output in 1..correctOutputs.count()) {
+                                JFunction += -correctOutputs[output-1]*(Math.log(outputLayer.neurons.last().activation))-(1-correctOutputs[output-1])*Math.log(1-outputLayer.neurons.last().activation)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        JFunction = JFunction/count
+        println(count)
+        println(JFunction)
     }
 
     fun forthAndBackPropagate(instance: Instance) {
@@ -30,7 +68,6 @@ class FlexNet (private val config : FlexNetConfig) {
 
     private fun backPropagate(correctOutput: Int) {
         val correctOutputs = buildCorrectOutputs(correctOutput)
-        println("Correct outputs $correctOutputs")
         var previousLayer = outputLayer
         outputLayer.calculateDeltasFromCorrectOutputs(correctOutputs)
         hiddenLayers.asReversed().forEach {
