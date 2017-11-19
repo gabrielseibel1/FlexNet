@@ -11,19 +11,20 @@ class CrossValidation (dataFile : String, val k : Int, config : FlexNetConfig, v
                     trainer.train(folding.folds[foldPropagate-1])
                 }
             }
+            trainer.flexNet.calculateJ(folding.folds, foldTest)
         }
     }
 }
 
 fun main(args : Array<String>) {
     val config = FlexNetConfig(
-            inputNeurons = 13,
-            numberOfTargetAttributeClassesInDataSet = 13,
+            inputNeurons = 3,
+            numberOfTargetAttributeClassesInDataSet = 2,
             hiddenLayers = 1,
             neuronsPerHiddenLayer = 4,
             lambda = 0.0
     )
-    val cv = CrossValidation("./data/wine.data", 10, config, 3)
+    val cv = CrossValidation("./data/haberman.data", 10, config, 3)
     cv.doCrossValidation()
     println("ok")
 }

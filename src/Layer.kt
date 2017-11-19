@@ -48,11 +48,11 @@ class Layer (size: Int, thetasPerNeuron: Int) {
         }
     }
 
-    fun updateThetas(previousLayer: Layer, alpha: Double) {
+    fun updateThetas(previousLayer: Layer, alpha: Double, lambda: Double) {
         neurons.forEachIndexed{ index, neuron ->
             //don't calculate theta for bias neuron (it has no thetas)
             if (index != neurons.lastIndex)
-                neuron.updateThetas(previousLayer, alpha)
+                neuron.updateThetas(previousLayer, alpha, lambda)
         }
     }
 
