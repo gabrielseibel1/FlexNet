@@ -1,7 +1,7 @@
 fun main(args : Array<String>) {
     val config = FlexNetConfig(
             inputNeurons = 1,
-            outputNeurons = 1,
+            numberOfTargetAttributeClassesInDataSet = 1,
             hiddenLayers = 2,
             neuronsPerHiddenLayer = 3,
             lambda = 0

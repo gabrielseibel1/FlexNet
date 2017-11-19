@@ -1,3 +1,1 @@
-data class Fold (
-    val dataSet : MutableList<Instance>
-)
+data class Fold (val dataSet: List<Instance>)

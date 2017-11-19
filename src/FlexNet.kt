@@ -1,7 +1,7 @@
 class FlexNet (val config : FlexNetConfig) {
 
     private val inputLayer : Layer = Layer(config.inputNeurons, 1)
-    private val outputLayer : Layer = Layer(config.outputNeurons, config.neuronsPerHiddenLayer)
+    private val outputLayer : Layer = Layer(config.numberOfTargetAttributeClassesInDataSet, config.neuronsPerHiddenLayer)
     private val hiddenLayers : List<Layer>
 
     init {
@@ -30,6 +30,7 @@ class FlexNet (val config : FlexNetConfig) {
 
     private fun backPropagate(correctOutput: Int) {
         val correctOutputs = buildCorrectOutputs(correctOutput)
+        println("Correct outputs $correctOutputs")
         var previousLayer = outputLayer
         outputLayer.calculateDeltasFromCorrectOutputs(correctOutputs)
         hiddenLayers.asReversed().forEach {
@@ -40,7 +41,7 @@ class FlexNet (val config : FlexNetConfig) {
 
     private fun buildCorrectOutputs(correctOutput: Int) : List<Int> {
         val correctOutputs = mutableListOf<Int>()
-        (1..config.outputNeurons).forEach {
+        (0 until config.numberOfTargetAttributeClassesInDataSet).forEach {
             if (it == correctOutput) correctOutputs.add(1) else correctOutputs.add(0)
         }
         return correctOutputs.toList()

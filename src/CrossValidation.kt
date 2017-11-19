@@ -18,7 +18,7 @@ class CrossValidation (dataFile : String, val k : Int, config : FlexNetConfig, v
 fun main(args : Array<String>) {
     val config = FlexNetConfig(
             inputNeurons = 13,
-            outputNeurons = 13,
+            numberOfTargetAttributeClassesInDataSet = 13,
             hiddenLayers = 1,
             neuronsPerHiddenLayer = 4,
             lambda = 0

@@ -29,6 +29,6 @@ class Layer (size: Int, thetasPerNeuron: Int) {
     }
 
     override fun toString(): String = buildString {
-        append("Layer{ size: ${neurons.size}, neurons: ${neurons.joinToString(prefix = "{", postfix = "}")}")
+        append("Layer(size: ${neurons.size}, neurons: ${neurons.joinToString(prefix = "{", postfix = "}")} )")
     }
 }

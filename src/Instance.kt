@@ -1,2 +1,1 @@
-data class Instance (val attributes : MutableList<Double>, var targetAttribute : String, var targetAttributeNeuron: Int) {
-}
+data class Instance (val attributes : MutableList<Double>, var targetAttribute : String, var targetAttributeNeuron: Int)
