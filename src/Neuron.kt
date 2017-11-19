@@ -9,7 +9,7 @@ class Neuron (thetaCount: Int){
     init {
         //thetas random initialization
         for (index in 1..thetaCount) {
-            thetas.add((1..20).random().toDouble()/10)
+            thetas.add((-20..20).random().toDouble()/10)
         }
     }
 
@@ -27,12 +27,18 @@ class Neuron (thetaCount: Int){
         delta = activation - correctOutput
     }
 
-    fun calculateDelta(previousLayer: Layer, positionInCurrentLayer: Int) {
+    fun calculateDelta(nextLayer: Layer, positionInCurrentLayer: Int) {
         var sum = 0.0
-        previousLayer.neurons.forEach {
+        nextLayer.neurons.forEach {
             sum += it.thetas[positionInCurrentLayer] * it.delta
         }
         delta = sum * activation * (1 - activation)
+    }
+
+    fun updateThetas(previousLayer: Layer, alpha: Double) {
+        previousLayer.neurons.forEachIndexed { index, neuron ->
+            thetas[index] = thetas[index] - alpha * (neuron.activation * delta)
+        }
     }
 
     override fun toString(): String = buildString {

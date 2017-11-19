@@ -3,8 +3,11 @@ class NetTrainer (private val flexNet: FlexNet) {
     fun train(fold: Fold) {
         for (instance in fold.dataSet) {
             println(instance)
-            println("\nTraining...\n")
-            flexNet.propagateAndBackPropagate(instance)
+            println("\nForth and Back propagate...\n")
+            flexNet.forthAndBackPropagate(instance)
+            flexNet.print()
+            println("\nUpdating thetas...\n")
+            flexNet.updateThetas()
             flexNet.print()
         }
     }
@@ -14,7 +17,7 @@ fun main(args: Array<String>) {
     val config = FlexNetConfig(
             inputNeurons = 1,
             numberOfTargetAttributeClassesInDataSet = 2,
-            hiddenLayers = 5,
+            hiddenLayers = 1,
             neuronsPerHiddenLayer = 3
     )
     val flexNet = FlexNet(config)

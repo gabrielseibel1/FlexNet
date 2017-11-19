@@ -1,4 +1,4 @@
-class FlexNet (val config : FlexNetConfig) {
+class FlexNet (private val config : FlexNetConfig) {
 
     private val inputLayer : Layer = Layer(config.inputNeurons, 1)
     private val outputLayer : Layer = Layer(config.numberOfTargetAttributeClassesInDataSet, config.neuronsPerHiddenLayer)
@@ -13,7 +13,7 @@ class FlexNet (val config : FlexNetConfig) {
         hiddenLayers= initLayers.toList()
     }
 
-    fun propagateAndBackPropagate(instance: Instance) {
+    fun forthAndBackPropagate(instance: Instance) {
         propagate(instance.attributes)
         backPropagate(instance.targetAttributeNeuron)
     }
@@ -37,6 +37,15 @@ class FlexNet (val config : FlexNetConfig) {
             it.calculateDeltas(previousLayer)
             previousLayer = it
         }
+    }
+
+    fun updateThetas() {
+        var previousLayer = inputLayer
+        hiddenLayers.forEach {
+            it.updateThetas(previousLayer, config.alpha)
+            previousLayer = it
+        }
+        outputLayer.updateThetas(previousLayer, config.alpha)
     }
 
     private fun buildCorrectOutputs(correctOutput: Int) : List<Int> {
