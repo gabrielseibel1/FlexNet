@@ -25,7 +25,7 @@ class Layer (size: Int, thetasPerNeuron: Int) {
     }
 
     fun calculateDeltas(previousLayer: Layer) {
-        neurons.forEach{ it.calculateDelta(previousLayer) }
+        neurons.forEachIndexed{ index, neuron ->  neuron.calculateDelta(previousLayer, index) }
     }
 
     override fun toString(): String = buildString {

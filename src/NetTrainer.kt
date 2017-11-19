@@ -13,8 +13,8 @@ class NetTrainer (private val flexNet: FlexNet) {
 fun main(args: Array<String>) {
     val config = FlexNetConfig(
             inputNeurons = 1,
-            numberOfTargetAttributeClassesInDataSet = 7,
-            hiddenLayers = 1,
+            numberOfTargetAttributeClassesInDataSet = 2,
+            hiddenLayers = 5,
             neuronsPerHiddenLayer = 3,
             lambda = 0
     )

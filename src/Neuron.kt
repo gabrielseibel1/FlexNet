@@ -27,11 +27,10 @@ class Neuron (thetaCount: Int){
         delta = activation - correctOutput
     }
 
-    fun calculateDelta(previousLayer: Layer) {
+    fun calculateDelta(previousLayer: Layer, positionInCurrentLayer: Int) {
         var sum = 0.0
-        previousLayer.neurons.forEachIndexed {
-            index, neuron ->
-            sum += neuron.thetas[index] * neuron.delta
+        previousLayer.neurons.forEach {
+            sum += it.thetas[positionInCurrentLayer] * it.delta
         }
         delta = sum * activation * (1 - activation)
     }
