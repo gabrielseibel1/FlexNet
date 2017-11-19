@@ -1,7 +1,6 @@
 class Layer (size: Int, thetasPerNeuron: Int) {
 
-    private val neurons : List<Neuron>
-    val activations = mutableListOf<Double>()
+    val neurons : List<Neuron>
 
     init {
         val initNeurons = mutableListOf<Neuron>()
@@ -11,30 +10,25 @@ class Layer (size: Int, thetasPerNeuron: Int) {
         neurons = initNeurons.toList()
     }
 
-    fun activate (previousLayer: Layer): List<Double> {
-        activations.clear()
-        neurons.forEach { activations.add( it.activate(previousLayer) ) }
-        return activations
-    }
-
     fun readInput(inputs: List<Double>) {
         if (inputs.size != neurons.size)
             throw Exception("Invalid inputs! Expected size ${neurons.size} but got ${inputs.size}")
-        activations.clear()
-        activations.addAll(inputs)
+        neurons.forEachIndexed{ index, neuron -> neuron.activation = inputs[index] }
+    }
+
+    fun activate(previousLayer: Layer) {
+        neurons.forEach { it.activate(previousLayer) }
+    }
+
+    fun calculateDeltasFromCorrectOutputs(correctOutputs: List<Int>) {
+        neurons.forEachIndexed { index, neuron ->  neuron.calculateDelta(correctOutputs[index]) }
+    }
+
+    fun calculateDeltas(previousLayer: Layer) {
+        neurons.forEach{ it.calculateDelta(previousLayer) }
     }
 
     override fun toString(): String = buildString {
-        append("Layer{ size = ${neurons.size}, ")
-
-        if (activations.isEmpty())
-            append("No activations ")
-        else
-            append("Activations ${activations.joinToString(prefix = "{", postfix = "}")}")
-
-
-        append(", ")
-        neurons.forEach { append(it) ; append(" ") }
-        append("}")
+        append("Layer{ size: ${neurons.size}, neurons: ${neurons.joinToString(prefix = "{", postfix = "}")}")
     }
 }

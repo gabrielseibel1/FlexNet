@@ -1,1 +1,1 @@
-data class Instance (val attributes: List<Double>)
+data class Instance (val attributes: List<Double>, val targetAttribute: Int)

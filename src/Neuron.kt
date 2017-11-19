@@ -3,6 +3,8 @@ import java.util.*
 class Neuron (thetaCount: Int){
 
     private val thetas : MutableList<Double> = mutableListOf()
+    var activation: Double = 0.0
+    var delta: Double = 0.0
 
     init {
         //thetas random initialization
@@ -11,18 +13,33 @@ class Neuron (thetaCount: Int){
         }
     }
 
-    fun activate(previousLayer : Layer) : Double {
+    fun activate(previousLayer : Layer) {
         var sum = 0.0
-        previousLayer.activations.forEachIndexed {
-            index, activation -> sum += thetas[index] * activation
+        previousLayer.neurons.forEachIndexed {
+            index, neuron -> sum += thetas[index] * neuron.activation
         }
-        return sigmoid(sum)
+        activation = sigmoid(sum)
     }
 
     private fun sigmoid(x: Double) : Double = 1 / (1 + Math.exp(-x))
 
+    fun calculateDelta(correctOutput: Int) {
+        delta = activation - correctOutput
+    }
+
+    fun calculateDelta(previousLayer: Layer) {
+        var sum = 0.0
+        previousLayer.neurons.forEachIndexed {
+            index, neuron -> sum += thetas[index] * neuron.delta
+        }
+        delta = sum * activation * (1 - activation)
+    }
+
     override fun toString(): String = buildString {
-        append("Neuron{ thetas: ${thetas.joinToString(prefix = "{", postfix = "}")} } ")
+        append("Neuron{")
+        append(" thetas: ${thetas.joinToString(prefix = "{", postfix = "}")},")
+        append(" activation: $activation,")
+        append(" delta: $delta }")
     }
 }
 

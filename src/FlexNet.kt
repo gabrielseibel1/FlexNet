@@ -13,6 +13,11 @@ class FlexNet (val config : FlexNetConfig) {
         hiddenLayers= initLayers.toList()
     }
 
+    fun propagateAndBackPropagate(instance: Instance) {
+        propagate(instance.attributes)
+        backPropagate(instance.targetAttribute)
+    }
+
     fun propagate(inputs: List<Double>) {
         activateInputLayer(inputs)
         var previousLayer = inputLayer
@@ -21,6 +26,24 @@ class FlexNet (val config : FlexNetConfig) {
             previousLayer = it
         }
         outputLayer.activate(hiddenLayers.last())
+    }
+
+    private fun backPropagate(correctOutput: Int) {
+        val correctOutputs = buildCorrectOutputs(correctOutput)
+        var previousLayer = outputLayer
+        outputLayer.calculateDeltasFromCorrectOutputs(correctOutputs)
+        hiddenLayers.asReversed().forEach {
+            it.calculateDeltas(previousLayer)
+            previousLayer = it
+        }
+    }
+
+    private fun buildCorrectOutputs(correctOutput: Int) : List<Int> {
+        val correctOutputs = mutableListOf<Int>()
+        (1..config.outputNeurons).forEach {
+            if (it == correctOutput) correctOutputs.add(1) else correctOutputs.add(0)
+        }
+        return correctOutputs.toList()
     }
 
     private fun activateInputLayer(inputs: List<Double>) {

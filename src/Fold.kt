@@ -1,11 +1,12 @@
-data class Fold (val instances: MutableList<Instance>) {
-    constructor(preFold: MutableList<List<Double>>, convert: Boolean) : this(preFold.toInstances())
+data class Fold (val instances: List<Instance>) {
+    constructor(preFold: MutableList<List<Double>>, classIsFirstAttribute: Boolean) : this(preFold.toInstances(classIsFirstAttribute))
 }
 
-fun MutableList<List<Double>>.toInstances() : MutableList<Instance> {
+fun MutableList<List<Double>>.toInstances(classIsFirstAttribute: Boolean) : List<Instance> {
     val instances: MutableList<Instance> = mutableListOf()
     this.forEach {
-        instances.add(Instance(it))
+        val targetAttribute: Int =  if (classIsFirstAttribute) it.first().toInt() else it.last().toInt()
+        instances.add(Instance(it, targetAttribute))
     }
-    return instances
+    return instances.toList()
 }
