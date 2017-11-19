@@ -5,8 +5,6 @@ class Neuron (thetaCount: Int){
     val thetas : MutableList<Double> = mutableListOf()
     var activation: Double = 0.0
     var delta: Double = 0.0
-    var lambda: Double = 0.0
-
     init {
         //thetas random initialization
         for (index in 1..thetaCount) {
