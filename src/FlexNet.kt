@@ -17,6 +17,25 @@ class FlexNet (private val config : FlexNetConfig) {
         calculateNumberOfNetThetas()
     }
 
+    fun getPredictedClass() : Int {
+        var predicted = 0
+        var probability = 0.0
+        outputLayer.neurons.forEachIndexed {
+            index, output ->
+                if(index != outputLayer.neurons.lastIndex) {
+                    if(output.activation > probability) {
+                        probability = output.activation
+                        predicted = index
+                    }
+                }
+        }
+        return predicted
+    }
+
+    fun getNumberOfClasses() : Int {
+        return outputLayer.neurons.count()-1
+    }
+
     private fun calculateNumberOfNetThetas() {
         for (neuron in inputLayer.neurons) {
             numberOfNetThetas+=neuron.thetas.count()
@@ -38,6 +57,7 @@ class FlexNet (private val config : FlexNetConfig) {
                     fold.dataSet.forEach {
                         instance -> run {
                             count++
+                            propagate(instance.attributes)
                             val correctOutputs = buildCorrectOutputs(instance.targetAttributeNeuron)
                             for (output in 1..correctOutputs.count()) {
                                 JFunction += -correctOutputs[output-1]*(Math.log(outputLayer.neurons[output-1].activation))-(1-correctOutputs[output-1])*Math.log(1-outputLayer.neurons[output-1].activation)
