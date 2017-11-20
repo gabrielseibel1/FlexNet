@@ -29,7 +29,7 @@ class FlexNet (private val config : FlexNetConfig) {
                 .forEach { numberOfNetThetas+= it.thetas.count() }
     }
 
-    fun calculateJ(folds: MutableList<Fold>, foldTest : Int) {
+    fun calculateJ(folds: MutableList<Fold>, foldTest : Int) : Double {
         var count = 0
         var regularization = 0.0
         folds.forEachIndexed {
@@ -38,6 +38,7 @@ class FlexNet (private val config : FlexNetConfig) {
                     fold.dataSet.forEach {
                         instance -> run {
                             count++
+                            propagate(instance.attributes)
                             val correctOutputs = buildCorrectOutputs(instance.targetAttributeNeuron)
                             for (output in 1..correctOutputs.count()) {
                                 JFunction += -correctOutputs[output-1]*(Math.log(outputLayer.neurons[output-1].activation))-(1-correctOutputs[output-1])*Math.log(1-outputLayer.neurons[output-1].activation)
@@ -76,8 +77,9 @@ class FlexNet (private val config : FlexNetConfig) {
         }
         regularization = (regularization*config.lambda)/(2*count)
         JFunction += regularization
-        println(count)
-        println(JFunction)
+        //println(count)
+        println("JFunction = $JFunction")
+        return JFunction
     }
 
     fun forthAndBackPropagate(instance: Instance) {
