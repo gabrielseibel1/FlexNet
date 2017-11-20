@@ -15,8 +15,9 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
                         config.alpha = alpha/10.0
 
                         //here we have a formed configuration to use an iterate over
+                        val flexNet = FlexNet(config)
+                        println(config)
 
-                        var flexNet = FlexNet(config)
                         var done = false
 
                         //train network one time with cross validation

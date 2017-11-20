@@ -1,9 +1,9 @@
 class NetTrainer(val stepOfJCheck: Int = 50) {
 
-    val MAX_TRIES = 5000
+    val MAX_TRIES = 500
     var triesCounter: Int = 0
-    val MIN_J_DIFFERENCE_PERCENTAGE = 0.000001
-    val MIN_GOOD_J = 0.1
+    val MIN_J_DIFFERENCE_PERCENTAGE = 0.00001
+    val MIN_GOOD_J = 0.55
 
     fun resetTrainingTriesCount() {
         triesCounter = 0

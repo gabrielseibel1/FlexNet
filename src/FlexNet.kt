@@ -78,7 +78,7 @@ class FlexNet (private val config : FlexNetConfig) {
         regularization = (regularization*config.lambda)/(2*count)
         JFunction += regularization
         //println(count)
-        println("JFunction = $JFunction")
+        //println("JFunction = $JFunction")
         return JFunction
     }
 
