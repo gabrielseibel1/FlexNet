@@ -9,13 +9,14 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
             config.hiddenLayers = numberOfHiddenLayers
             for (numberOfNeurons in 2..2) {
                 config.neuronsPerHiddenLayer = numberOfNeurons
-                for(lambda in 12..12) {
+                for(lambda in 1..12) {
                     config.lambda = lambda/10.0
-                    for(alpha in 4..4) {
+                    for(alpha in 1..4) {
                         config.alpha = alpha/10.0
 
                         //here we have a formed configuration to use an iterate over
                         val flexNet = FlexNet(config)
+                        println("\n\n//////////////// CONFIG ////////////////")
                         println(config)
 
                         var done = false
@@ -39,12 +40,31 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
                             }
                         } while (!done)
 
-                        //metrics for current config
-                        flexNet.calculateJ(folding.folds, foldTest)
-                        trainer.calculateConfusionMatrix(flexNet, folding.folds[foldTest-1])
-                        println(trainer.getAccuracy(flexNet))
-                        println(trainer.getPrecision(flexNet))
-                        println(trainer.getRecall(flexNet))
+                        //now calculate metrics for current config
+
+                        var sumOfJs = 0.0
+                        var sumOfAccuracies = 0.0
+                        var sumOfPrecisions = 0.0
+                        var sumOfRecalls = 0.0
+
+                        for (testFold in 1..k) {
+                            sumOfJs += flexNet.calculateJ(folding.folds, testFold)
+                            trainer.calculateConfusionMatrix(flexNet, folding.folds[testFold-1])
+                            sumOfAccuracies += trainer.getAccuracy(flexNet)
+                            sumOfPrecisions += trainer.getPrecision(flexNet)
+                            sumOfRecalls += trainer.getRecall(flexNet)
+                        }
+
+                        //take means of metrics
+                        val meanJ = sumOfJs/k
+                        val meanAccuracy = sumOfAccuracies/k
+                        val meanPrecision = sumOfPrecisions/k
+                        val meanRecall = sumOfRecalls/k
+
+                        println("Mean cost (J) = $meanJ")
+                        println("Mean accuracy = $meanAccuracy")
+                        println("Mean precision = $meanPrecision")
+                        println("Mean recall = $meanRecall")
                     }
                 }
             }

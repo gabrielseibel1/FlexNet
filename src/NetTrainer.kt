@@ -76,11 +76,11 @@ class NetTrainer(val stepOfJCheck: Int = 50) {
 
     private fun isJGoodEnough(previousJ: Double, newJ: Double): Boolean {
         if (newJ <= MIN_GOOD_J) {
-            println("Good J = $newJ")
+            println("Training stopped: found good J ($newJ)")
             return true
 
         } else if (Math.abs((previousJ - newJ)/previousJ) <= MIN_J_DIFFERENCE_PERCENTAGE) {
-            println("J difference percentage = ${Math.abs((previousJ - newJ)/previousJ)}")
+            println("Training stopped: low J difference percentage (${Math.abs((previousJ - newJ)/previousJ)})")
             return true
         } else
             return false
@@ -90,7 +90,7 @@ class NetTrainer(val stepOfJCheck: Int = 50) {
     private fun triedEnoughTimes(): Boolean {
         triesCounter++
         if (triesCounter >= MAX_TRIES) {
-            println("triesCounter = $triesCounter")
+            println("Training stopped: took too many tries ($triesCounter)")
             return true
         } else
             return false
@@ -108,12 +108,12 @@ class NetTrainer(val stepOfJCheck: Int = 50) {
             confusionMatrix.add(auxList)
         }
         for (instance in fold.dataSet) {
-            println(instance)
+            //println(instance)
             flexNet.propagate(instance.attributes)
-            println(flexNet.getPredictedClass())
+            //println(flexNet.getPredictedClass())
             confusionMatrix[instance.targetAttributeNeuron][flexNet.getPredictedClass()]++
         }
-        println(confusionMatrix)
+        //println(confusionMatrix)
     }
 
     fun getAccuracy(flexNet: FlexNet) : Double {
