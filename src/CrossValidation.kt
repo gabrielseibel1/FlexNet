@@ -48,7 +48,7 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
                         var sumOfRecalls = 0.0
 
                         for (testFold in 1..k) {
-                            sumOfJs += flexNet.calculateJ(folding.folds, testFold)
+                            sumOfJs += flexNet.calculateJFromFolds(folding.folds, testFold)
                             trainer.calculateConfusionMatrix(flexNet, folding.folds[testFold-1])
                             sumOfAccuracies += trainer.getAccuracy(flexNet)
                             sumOfPrecisions += trainer.getPrecision(flexNet)
