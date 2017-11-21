@@ -79,7 +79,7 @@ class FlexNet (private val config : FlexNetConfig) {
         }
 
         println("Theta[$layerDescription][neuron $neuronIndex][theta $thetaIndex] = $theta")
-        println("Gradient = $gradDescription = $grad")
+        //println("Gradient = $gradDescription = $grad")
 
         return grad
     }
