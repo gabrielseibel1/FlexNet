@@ -69,17 +69,17 @@ class FlexNet (private val config : FlexNetConfig) {
         //don't use regularization term for bias-neuron's theta
         val grad: Double
         val gradDescription: String
-        if (previousLayer.isOutputLayer || ((!previousLayer.isOutputLayer) and (neuronIndex == previousLayer.neurons.lastIndex))) {
-            grad =  neuron.activation * neuron.delta
-            gradDescription = "${neuron.activation} * ${neuron.delta}"
+        if (thetaIndex == previousLayer.neurons.lastIndex) {
+            grad =  previousLayer.neurons[thetaIndex].activation * neuron.delta
+            gradDescription = "${previousLayer.neurons[thetaIndex].activation} * ${neuron.delta}"
         }
         else {
-            grad = neuron.activation*neuron.delta + config.lambda*theta
-            gradDescription = "${neuron.activation} * ${neuron.delta} + ${config.lambda}*$theta"
+            grad = previousLayer.neurons[thetaIndex].activation*neuron.delta + config.lambda*theta
+            gradDescription = "${previousLayer.neurons[thetaIndex].activation} * ${neuron.delta} + ${config.lambda}*$theta"
         }
 
         println("Theta[$layerDescription][neuron $neuronIndex][theta $thetaIndex] = $theta")
-        //println("Gradient = $gradDescription = $grad")
+        println("Gradient = $gradDescription = $grad")
 
         return grad
     }
