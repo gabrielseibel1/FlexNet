@@ -1,4 +1,4 @@
-class Layer (size: Int, thetasPerNeuron: Int) {
+class Layer (size: Int, thetasPerNeuron: Int, val isInputLayer: Boolean = false, val isOutputLayer: Boolean = false) {
 
     val neurons: List<Neuron>
 
@@ -6,11 +6,17 @@ class Layer (size: Int, thetasPerNeuron: Int) {
         val initNeurons = mutableListOf<Neuron>()
 
         for (index in 1..size) {
-            initNeurons.add(Neuron(thetasPerNeuron + 1 /*sum one to account for bias theta (theta0) */))
+            if (isInputLayer)
+                initNeurons.add(Neuron(0))
+            else
+                initNeurons.add(Neuron(thetasPerNeuron + 1 /*sum one to account for bias theta (theta0) */))
         }
-        val biasNeuron = Neuron(0)
-        biasNeuron.activation = 1.0
-        initNeurons.add(biasNeuron)
+
+        if (!isOutputLayer) {
+            val biasNeuron = Neuron(0)
+            biasNeuron.activation = 1.0
+            initNeurons.add(biasNeuron)
+        }
 
         neurons = initNeurons.toList()
     }
@@ -27,15 +33,13 @@ class Layer (size: Int, thetasPerNeuron: Int) {
     fun activate(previousLayer: Layer) {
         neurons.forEachIndexed { index, neuron ->
             //don't activate bias neuron
-            if (index != neurons.lastIndex)
+            if (isOutputLayer || (!isOutputLayer and (index != neurons.lastIndex)))
                 neuron.activate(previousLayer)
         }
     }
 
     fun calculateDeltasFromCorrectOutputs(correctOutputs: List<Int>) {
         neurons.forEachIndexed{ index, neuron ->
-            //don't calculate delta for bias neuron
-            if (index != neurons.lastIndex)
                neuron.calculateDelta(correctOutputs[index])
         }
     }
@@ -43,7 +47,7 @@ class Layer (size: Int, thetasPerNeuron: Int) {
     fun calculateDeltas(nextLayer: Layer) {
         neurons.forEachIndexed{ index, neuron ->
             //don't calculate delta for bias neuron
-            if (index != neurons.lastIndex)
+            if (nextLayer.isOutputLayer || ((!nextLayer.isOutputLayer) and (index != neurons.lastIndex)))
                 neuron.calculateDelta(nextLayer, index)
         }
     }
@@ -51,9 +55,32 @@ class Layer (size: Int, thetasPerNeuron: Int) {
     fun updateThetas(previousLayer: Layer, alpha: Double, lambda: Double) {
         neurons.forEachIndexed{ index, neuron ->
             //don't calculate theta for bias neuron (it has no thetas)
-            if (index != neurons.lastIndex)
+            if (isOutputLayer or ((!isOutputLayer) and (index != neurons.lastIndex)))
                 neuron.updateThetas(previousLayer, alpha, lambda)
         }
+    }
+
+    fun getThetasOfEachNeuron(): List<List<Double>> {
+        val thetas = mutableListOf(listOf<Double>())
+        thetas.clear()
+        neurons.forEachIndexed { index, neuron ->
+            //skip bias neuron
+            if (isOutputLayer || (!isOutputLayer and (index != neurons.lastIndex))) {
+                //copy a neuron's thetas
+                val itsThetas = mutableListOf<Double>()
+                itsThetas.addAll(neuron.thetas)
+
+                //add the list to a bigger list
+                thetas.add(itsThetas)
+            }
+        }
+        return thetas.toList()
+    }
+
+    fun getActivations(): List<Double> {
+        val activations = mutableListOf<Double>()
+        neurons.forEach { activations.add(it.activation) }
+        return activations.toList()
     }
 
     override fun toString(): String = buildString {

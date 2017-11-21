@@ -9,10 +9,10 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
             config.hiddenLayers = numberOfHiddenLayers
             for (numberOfNeurons in 2..2) {
                 config.neuronsPerHiddenLayer = numberOfNeurons
-                for(lambda in 1..12) {
+                for(lambda in 12..12) {
                     config.lambda = lambda/10.0
                     for(alpha in 1..4) {
-                        config.alpha = alpha/10.0
+                        config.alpha = alpha/50.0
 
                         //here we have a formed configuration to use an iterate over
                         val flexNet = FlexNet(config)
@@ -48,7 +48,7 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
                         var sumOfRecalls = 0.0
 
                         for (testFold in 1..k) {
-                            sumOfJs += flexNet.calculateJ(folding.folds, testFold)
+                            sumOfJs += flexNet.calculateJFromFolds(folding.folds, testFold)
                             trainer.calculateConfusionMatrix(flexNet, folding.folds[testFold-1])
                             sumOfAccuracies += trainer.getAccuracy(flexNet)
                             sumOfPrecisions += trainer.getPrecision(flexNet)
@@ -77,8 +77,7 @@ fun main(args : Array<String>) {
             inputNeurons = 13,
             numberOfTargetAttributeClassesInDataSet = 3,
             hiddenLayers = 1,
-            neuronsPerHiddenLayer = 3,
-            lambda = 0.0
+            neuronsPerHiddenLayer = 3
     )
     val cv = CrossValidation("./data/wine.data", 10, config, 0)
     cv.doCrossValidation()

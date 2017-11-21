@@ -26,10 +26,10 @@ class NetTrainer(val stepOfJCheck: Int = 50) {
         //separate instances in (trainingInstances.size/stepOfJCheck) small batches
         (0 until (trainingInstances.size/stepOfJCheck)).forEach {
             //train batch
-            previousJ = flexNet.calculateJ(folds, testFold)
+            previousJ = flexNet.calculateJFromFolds(folds, testFold)
             val batch = buildBatch(trainingInstances, it)
             trainBatch(flexNet, batch)
-            newJ = flexNet.calculateJ(folds, testFold)
+            newJ = flexNet.calculateJFromFolds(folds, testFold)
 
             //after each batch is trained, checks if should end training
             if (shouldEndTraining(previousJ, newJ)) return true
@@ -42,9 +42,9 @@ class NetTrainer(val stepOfJCheck: Int = 50) {
         //trains rest of instances that didn't fit in batches (if there is any)
         val remainingBatch = trainingInstances.subList(trainingInstances.size - (trainingInstances.size % stepOfJCheck), trainingInstances.lastIndex)
         if (remainingBatch.isNotEmpty()) {
-            previousJ = flexNet.calculateJ(folds, testFold)
+            previousJ = flexNet.calculateJFromFolds(folds, testFold)
             trainBatch(flexNet, remainingBatch)
-            newJ = flexNet.calculateJ(folds, testFold)
+            newJ = flexNet.calculateJFromFolds(folds, testFold)
 
             //after rest of instances are trained, checks if should end training
             if (shouldEndTraining(previousJ, newJ)) return true
@@ -143,7 +143,7 @@ class NetTrainer(val stepOfJCheck: Int = 50) {
                     if(trueClass != i && trueClass != predictedClass) vn += confusionMatrix[trueClass-1][predictedClass-1]
                 }
             }
-            if(fp+vp == 0) {
+            if (fp+vp == 0) {
                 precisao +=0
             }
             else {
@@ -181,7 +181,7 @@ fun main(args: Array<String>) {
             numberOfTargetAttributeClassesInDataSet = 2,
             hiddenLayers = 1,
             neuronsPerHiddenLayer = 3,
-            alpha = 0.0001,
+            alpha = 0.0000001,
             lambda = 0.0
     )
     val flexNet = FlexNet(config)

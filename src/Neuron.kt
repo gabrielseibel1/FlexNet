@@ -28,7 +28,7 @@ class Neuron (thetaCount: Int){
     fun calculateDelta(nextLayer: Layer, positionInCurrentLayer: Int) {
         var sum = 0.0
         nextLayer.neurons.forEachIndexed { index, neuron ->
-            if (index != nextLayer.neurons.lastIndex)
+            if (nextLayer.isOutputLayer || (!nextLayer.isOutputLayer and (index != nextLayer.neurons.lastIndex)))
                 sum += neuron.thetas[positionInCurrentLayer] * neuron.delta
         }
         delta = sum * activation * (1 - activation)
@@ -36,7 +36,11 @@ class Neuron (thetaCount: Int){
 
     fun updateThetas(previousLayer: Layer, alpha: Double, lambda: Double) {
         previousLayer.neurons.forEachIndexed { index, neuron ->
-            thetas[index] = thetas[index] - alpha * ((neuron.activation * delta) + lambda*thetas[index])
+            //don't use regularization term for bias-neuron's theta
+            if (index == previousLayer.neurons.lastIndex)
+                thetas[index] = thetas[index] - alpha * ((neuron.activation * delta))
+            else
+                thetas[index] = thetas[index] - alpha * ((neuron.activation * delta) + lambda*thetas[index])
         }
     }
 

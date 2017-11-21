@@ -1,7 +1,7 @@
 class FlexNet (private val config : FlexNetConfig) {
 
-    private val inputLayer : Layer = Layer(config.inputNeurons, 1)
-    private val outputLayer : Layer = Layer(config.numberOfTargetAttributeClassesInDataSet, config.neuronsPerHiddenLayer)
+    private val inputLayer : Layer = Layer(config.inputNeurons, 0, isInputLayer = true)
+    private val outputLayer : Layer = Layer(config.numberOfTargetAttributeClassesInDataSet, config.neuronsPerHiddenLayer, isOutputLayer = true)
     private val hiddenLayers : List<Layer>
     private var numberOfNetThetas : Int = 0
     private var JFunction : Double = 0.0
@@ -17,24 +17,109 @@ class FlexNet (private val config : FlexNetConfig) {
         calculateNumberOfNetThetas()
     }
 
+    fun changeOneTheta(layerIndex: Int, neuronIndex: Int, thetaIndex: Int, value: Double) {
+        val layer: Layer
+        val layerDescription:String
+        when {
+            layerIndex == 0 -> throw Exception("You don't want to change a theta from the input layer!")
+
+            (layerIndex > 0) and (layerIndex-1 <= hiddenLayers.lastIndex) -> {
+                layer = hiddenLayers[layerIndex-1]
+                layerDescription = "hiddenLayer ${layerIndex-1}"
+            }
+
+            else -> {
+                layer = outputLayer
+                layerDescription = "outputLayer"
+            }
+        }
+
+        if ((!layer.isOutputLayer) and (neuronIndex == layer.neurons.lastIndex)) throw Exception("Bias neuron doesn't have a gradient!")
+
+        val neuron = layer.neurons[neuronIndex]
+        //println("Changing theta[$layerDescription][neuron $neuronIndex][theta $thetaIndex] from ${neuron.thetas[thetaIndex]} to $value")
+        neuron.thetas[thetaIndex] = value
+    }
+
+    fun getGrad(layerIndex: Int, neuronIndex: Int, thetaIndex: Int): Double {
+        val layer: Layer
+        val previousLayer: Layer
+        val layerDescription:String
+        when {
+            layerIndex == 0 -> throw Exception("Input layer's neurons don't have a gradient!")
+
+            (layerIndex > 0) and (layerIndex-1 <= hiddenLayers.lastIndex) -> {
+                layer = hiddenLayers[layerIndex-1]
+                previousLayer = if (layerIndex == 1) /*layer is first of the hidden*/ inputLayer else hiddenLayers[layerIndex-2]
+                layerDescription = "hiddenLayer ${layerIndex-1}"
+            }
+
+            else -> {
+                layer = outputLayer
+                previousLayer = hiddenLayers.last()
+                layerDescription = "outputLayer"
+            }
+        }
+
+        if ((!layer.isOutputLayer) and (neuronIndex == layer.neurons.lastIndex)) throw Exception("Bias neuron doesn't have a gradient!")
+
+        val neuron = layer.neurons[neuronIndex]
+        val theta = neuron.thetas[thetaIndex]
+
+        //don't use regularization term for bias-neuron's theta
+        val grad: Double
+        val gradDescription: String
+        if (previousLayer.isOutputLayer || ((!previousLayer.isOutputLayer) and (neuronIndex == previousLayer.neurons.lastIndex))) {
+            grad =  neuron.activation * neuron.delta
+            gradDescription = "${neuron.activation} * ${neuron.delta}"
+        }
+        else {
+            grad = neuron.activation*neuron.delta + config.lambda*theta
+            gradDescription = "${neuron.activation} * ${neuron.delta} + ${config.lambda}*$theta"
+        }
+
+        println("Theta[$layerDescription][neuron $neuronIndex][theta $thetaIndex] = $theta")
+        //println("Gradient = $gradDescription = $grad")
+
+        return grad
+    }
+
+    private fun getAllActivations(): List<List<Double>> {
+        val allActivations = mutableListOf<List<Double>>()
+        hiddenLayers.forEach { allActivations.add(it.getActivations()) }
+        allActivations.add(outputLayer.getActivations())
+        return allActivations.toList()
+    }
+
+    fun getAllThetas(): List<List<List<Double>>> {
+        val allThetas = mutableListOf<List<List<Double>>>()
+        allThetas.add(inputLayer.getThetasOfEachNeuron())
+        hiddenLayers.forEach { allThetas.add(it.getThetasOfEachNeuron()) }
+        allThetas.add(outputLayer.getThetasOfEachNeuron())
+        return allThetas.toList()
+    }
+
+    fun getOutputs(): List<Double> {
+        val outputs = mutableListOf<Double>()
+        outputLayer.neurons.forEach {
+                outputs.add(it.activation)
+        }
+        return outputs.toList()
+    }
+
     fun getPredictedClass() : Int {
         var predicted = 0
         var probability = 0.0
-        outputLayer.neurons.forEachIndexed {
-            index, output ->
-                if(index != outputLayer.neurons.lastIndex) {
-                    if(output.activation > probability) {
-                        probability = output.activation
-                        predicted = index
-                    }
+        outputLayer.neurons.forEachIndexed { index, output ->
+                if (output.activation > probability) {
+                    probability = output.activation
+                    predicted = index
                 }
         }
         return predicted
     }
 
-    fun getNumberOfClasses() : Int {
-        return outputLayer.neurons.count()-1
-    }
+    fun getNumberOfClasses() : Int = outputLayer.neurons.count()-1
 
     private fun calculateNumberOfNetThetas() {
         for (neuron in inputLayer.neurons) {
@@ -48,7 +133,50 @@ class FlexNet (private val config : FlexNetConfig) {
                 .forEach { numberOfNetThetas+= it.thetas.count() }
     }
 
-    fun calculateJ(folds: MutableList<Fold>, foldTest : Int) : Double {
+    fun calculateJ(instances: List<Instance>): Double {
+        JFunction = 0.0
+        var count = 0
+        var regularization = 0.0
+
+        //calculate first term
+        instances.forEach {
+            count++
+            propagate(it.attributes)
+            val correctOutputs = buildCorrectOutputs(it.targetAttributeNeuron)
+            val outputs = getOutputs()
+            //println("Outputs $outputs")
+            //println("Correct outputs $correctOutputs")
+            for (k in 0..correctOutputs.lastIndex) {
+                JFunction += -correctOutputs[k]*(Math.log(outputs[k]))  -  (1-correctOutputs[k])*Math.log(1-outputs[k])
+            }
+        }
+        JFunction /= count
+
+        //calculate regularization term
+        inputLayer.neurons.forEach {
+            it.thetas.forEachIndexed { index, theta ->
+                if (index != inputLayer.neurons.lastIndex) regularization += Math.pow(theta, 2.0)
+            }
+        }
+        hiddenLayers.forEach { layer ->
+            layer.neurons.forEach {
+                it.thetas.forEachIndexed { index, theta ->
+                    if (index != layer.neurons.lastIndex) regularization += Math.pow(theta, 2.0)
+                }
+            }
+        }
+        outputLayer.neurons.forEach {
+            it.thetas.forEach {  regularization += Math.pow(it, 2.0) }
+        }
+        regularization = (regularization*config.lambda)/(2*count)
+
+        //join two terms
+        JFunction += regularization
+        return JFunction
+    }
+
+    fun calculateJFromFolds(folds: MutableList<Fold>, foldTest : Int) : Double {
+        JFunction = 0.0
         var count = 0
         var regularization = 0.0
         folds.forEachIndexed {
@@ -72,7 +200,7 @@ class FlexNet (private val config : FlexNetConfig) {
             neuron -> run {
                 neuron.thetas.forEachIndexed {
                     index, theta ->
-                        if(index != inputLayer.neurons.lastIndex) regularization += Math.pow(theta, 2.0)
+                        if (index != inputLayer.neurons.lastIndex) regularization += Math.pow(theta, 2.0)
                 }
             }
         }
@@ -89,15 +217,13 @@ class FlexNet (private val config : FlexNetConfig) {
         }
         outputLayer.neurons.forEach {
             neuron -> run {
-                neuron.thetas.forEachIndexed {
-                    index, theta -> if(index != outputLayer.neurons.lastIndex) regularization += Math.pow(theta, 2.0)
-                }
+                neuron.thetas.forEach { theta -> regularization += Math.pow(theta, 2.0) }
             }
         }
         regularization = (regularization*config.lambda)/(2*count)
         JFunction += regularization
         //println(count)
-        //println("JFunction = $JFunction")
+        println("JFunction = $JFunction")
         return JFunction
     }
 
@@ -116,7 +242,7 @@ class FlexNet (private val config : FlexNetConfig) {
         outputLayer.activate(hiddenLayers.last())
     }
 
-    private fun backPropagate(correctOutput: Int) {
+    fun backPropagate(correctOutput: Int) {
         val correctOutputs = buildCorrectOutputs(correctOutput)
         var previousLayer = outputLayer
         outputLayer.calculateDeltasFromCorrectOutputs(correctOutputs)
