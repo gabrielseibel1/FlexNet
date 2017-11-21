@@ -1,6 +1,6 @@
-class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfig, targetPosition : Int) {
+class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfig, targetPosition : Int, hasId : Boolean) {
 
-    private val dr = DataReader(dataFile, targetPosition)
+    private val dr = DataReader(dataFile, targetPosition, hasId)
     private val folding = Folding(dr.getTrainingDataSet(), k)
     private val trainer = NetTrainer()
 
@@ -9,9 +9,9 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
             config.hiddenLayers = numberOfHiddenLayers
             for (numberOfNeurons in 2..2) {
                 config.neuronsPerHiddenLayer = numberOfNeurons
-                for(lambda in 1..12) {
-                    config.lambda = lambda/10.0
-                    for(alpha in 1..4) {
+                for(lambda in 1..1) {
+                    config.lambda = lambda/10000000.0
+                    for(alpha in 1..6) {
                         config.alpha = alpha/10.0
 
                         //here we have a formed configuration to use an iterate over
@@ -74,13 +74,13 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
 
 fun main(args : Array<String>) {
     val config = FlexNetConfig(
-            inputNeurons = 13,
-            numberOfTargetAttributeClassesInDataSet = 3,
+            inputNeurons = 30,
+            numberOfTargetAttributeClassesInDataSet = 2,
             hiddenLayers = 1,
             neuronsPerHiddenLayer = 3,
-            lambda = 0.0
+            lambda = 0.00001
     )
-    val cv = CrossValidation("./data/wine.data", 10, config, 0)
+    val cv = CrossValidation("./data/wdbc.data", 10, config, 0, true)
     cv.doCrossValidation()
     println("ok")
 }

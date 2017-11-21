@@ -110,7 +110,9 @@ class NetTrainer(val stepOfJCheck: Int = 50) {
         for (instance in fold.dataSet) {
             //println(instance)
             flexNet.propagate(instance.attributes)
-            //println(flexNet.getPredictedClass())
+            //println("Target Attribute: "+instance)
+            println("Classe predita: "+flexNet.getPredictedClass()+" Classe esperada: "+instance.targetAttributeNeuron)
+            println((flexNet.getPredictedClass()==instance.targetAttributeNeuron))
             confusionMatrix[instance.targetAttributeNeuron][flexNet.getPredictedClass()]++
         }
         //println(confusionMatrix)

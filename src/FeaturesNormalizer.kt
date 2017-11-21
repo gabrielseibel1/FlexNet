@@ -35,6 +35,7 @@ class FeaturesNormalizer (private val targetPosition : Int) {
 
             auxDataSet.forEachIndexed {
                 index, instance -> run {
+                    //println(instance.targetAttribute)
                     dataSetNormalized[index].targetAttributeNeuron = targetAttributesKnown.insertTargetAttribute(instance.targetAttribute)!!
                     dataSetNormalized[index].targetAttribute = instance.targetAttribute
                     dataSetNormalized[index].attributes.add((instance.attributes[feature-1]-minValue)/(maxValue-minValue))

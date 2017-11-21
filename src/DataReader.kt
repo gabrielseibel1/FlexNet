@@ -1,7 +1,7 @@
 import java.io.File
 import java.util.*
 
-class DataReader (val file : String, targetPosition : Int) {
+class DataReader (val file : String, targetPosition : Int, hasId : Boolean) {
 
     private val dataString : String = File(file).readText()
     private val dataSet : MutableList<List<String>> = mutableListOf()
@@ -12,7 +12,14 @@ class DataReader (val file : String, targetPosition : Int) {
     init {
         val featuresNormalizer = FeaturesNormalizer(targetPosition)
         dataString.lines().forEach {
-            line -> if(line != "") dataSet.add(line.split(","))
+            line -> if(line != "") {
+                var instance_aux = line.split(",")
+                if(hasId) {
+                    instance_aux = instance_aux.subList(1, instance_aux.count())
+                }
+                dataSet.add(instance_aux)
+            }
+            //println(line)
         }
         dataSetNormalized.addAll(featuresNormalizer.normalizeFeatures(dataSet))
         Collections.shuffle(dataSetNormalized)
@@ -46,5 +53,5 @@ class DataReader (val file : String, targetPosition : Int) {
 }
 
 fun main(args : Array<String>) {
-    val dataReader : DataReader = DataReader("./data/haberman.data", 3)
+    val dataReader : DataReader = DataReader("./data/haberman.data", 3, true)
 }
