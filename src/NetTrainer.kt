@@ -61,6 +61,7 @@ class NetTrainer(val stepOfJCheck: Int = 50) {
         batch.forEach{
             flexNet.forthAndBackPropagate(it)
             flexNet.updateThetas()
+            println("Predicted class is ${flexNet.getPredictedClass()}")
         }
     }
 

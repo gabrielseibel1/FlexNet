@@ -2,8 +2,8 @@ class FlexNetVerifier {
 
     private val config = FlexNetConfig(
             inputNeurons = 1,
-            hiddenLayers = 1,
-            neuronsPerHiddenLayer = 1,
+            hiddenLayers = 2,
+            neuronsPerHiddenLayer = 2,
             numberOfTargetAttributeClassesInDataSet = 1,
             lambda = 1.0,
             alpha = 0.1

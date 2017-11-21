@@ -119,7 +119,7 @@ class FlexNet (private val config : FlexNetConfig) {
         return predicted
     }
 
-    fun getNumberOfClasses() : Int = outputLayer.neurons.count()-1
+    fun getNumberOfClasses() : Int = outputLayer.neurons.count()
 
     private fun calculateNumberOfNetThetas() {
         for (neuron in inputLayer.neurons) {
@@ -153,20 +153,19 @@ class FlexNet (private val config : FlexNetConfig) {
         JFunction /= count
 
         //calculate regularization term
-        inputLayer.neurons.forEach {
-            it.thetas.forEachIndexed { index, theta ->
-                if (index != inputLayer.neurons.lastIndex) regularization += Math.pow(theta, 2.0)
-            }
-        }
+        var previousLayer = inputLayer
         hiddenLayers.forEach { layer ->
             layer.neurons.forEach {
                 it.thetas.forEachIndexed { index, theta ->
-                    if (index != layer.neurons.lastIndex) regularization += Math.pow(theta, 2.0)
+                    if (index != previousLayer.neurons.lastIndex) regularization += Math.pow(theta, 2.0)
                 }
             }
+            previousLayer = layer
         }
         outputLayer.neurons.forEach {
-            it.thetas.forEach {  regularization += Math.pow(it, 2.0) }
+            it.thetas.forEachIndexed { index, theta ->
+                if (index != previousLayer.neurons.lastIndex) regularization += Math.pow(theta, 2.0)
+            }
         }
         regularization = (regularization*config.lambda)/(2*count)
 
@@ -195,29 +194,21 @@ class FlexNet (private val config : FlexNetConfig) {
                 }
             }
         }
-        JFunction = JFunction/count
-        inputLayer.neurons.forEach {
-            neuron -> run {
-                neuron.thetas.forEachIndexed {
-                    index, theta ->
-                        if (index != inputLayer.neurons.lastIndex) regularization += Math.pow(theta, 2.0)
+        JFunction /= count
+
+        //calculate regularization term
+        var previousLayer = inputLayer
+        hiddenLayers.forEach { layer ->
+            layer.neurons.forEach {
+                it.thetas.forEachIndexed { index, theta ->
+                    if (index != previousLayer.neurons.lastIndex) regularization += Math.pow(theta, 2.0)
                 }
             }
-        }
-        hiddenLayers.forEach {
-            layer -> run {
-                layer.neurons.forEach {
-                    neuron -> run {
-                        neuron.thetas.forEachIndexed {
-                            index, theta -> if(index != layer.neurons.lastIndex) regularization += Math.pow(theta, 2.0)
-                        }
-                    }
-                }
-            }
+            previousLayer = layer
         }
         outputLayer.neurons.forEach {
-            neuron -> run {
-                neuron.thetas.forEach { theta -> regularization += Math.pow(theta, 2.0) }
+            it.thetas.forEachIndexed { index, theta ->
+                if (index != previousLayer.neurons.lastIndex) regularization += Math.pow(theta, 2.0)
             }
         }
         regularization = (regularization*config.lambda)/(2*count)
