@@ -33,18 +33,22 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
                         var done = false
                         do {
 
-                            var meanJOfFolding = 0.0
+                            var meanJOfFoldings = 0.0
+                            var foldingsCount = 0
                             for (testFold in 0 until k) {
                                 done = trainer.trainFolding(flexNet, folding, testFold)
 
                                 //add metrics to be plotted later
                                 trainedFoldings++
-                                meanJOfFolding += flexNet.calculateJ(folding, testFold)
+                                meanJOfFoldings += flexNet.calculateJ(folding, testFold)
+
+                                //counts how many foldings in this round we're trained to calculate mean J
+                                foldingsCount++
                                 if (done) break
                             }
-                            meanJOfFolding /= k
+                            meanJOfFoldings /= foldingsCount
                             listOfTrainedFoldings.add(trainedFoldings.toDouble())
-                            listOfJs.add(meanJOfFolding)
+                            listOfJs.add(meanJOfFoldings)
 
                         } while (!done)
 
@@ -89,13 +93,13 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
 
 fun main(args : Array<String>) {
     val config = FlexNetConfig(
-            inputNeurons = 30,
-            numberOfTargetAttributeClassesInDataSet = 2,
+            inputNeurons = 13,
+            numberOfTargetAttributeClassesInDataSet = 3,
             hiddenLayers = 1,
             neuronsPerHiddenLayer = 3,
             lambda = 0.00001
     )
-    val cv = CrossValidation("./data/wdbc.data", 10, config, 0, true)
+    val cv = CrossValidation("./data/wine.data", 10, config, 0, false)
     cv.doCrossValidation()
     println("ok")
 }

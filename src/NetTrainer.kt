@@ -1,11 +1,11 @@
 class NetTrainer(val stepOfJCheck: Int = 50) {
 
-    val MAX_TRIES = 100000
+    private val MAX_TRIES = 100000
     var triesCounter: Int = 0
-    val MAX_NO_IMPROVEMENT_TRIES = 15
+    private val MAX_NO_IMPROVEMENT_TRIES = 30
     var noImprovementCounter = 0
-    val MIN_J_DIFFERENCE_PERCENTAGE = 0.01
-    val MIN_GOOD_J = 0.000065
+    private val MIN_J_DIFFERENCE_PERCENTAGE = 0.01
+    private val MIN_GOOD_J = 0.000065
 
     var confusionMatrix : MutableList<MutableList<Int>> = mutableListOf()
 
