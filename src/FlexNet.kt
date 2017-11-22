@@ -133,12 +133,12 @@ class FlexNet (private val config : FlexNetConfig) {
                 .forEach { numberOfNetThetas+= it.thetas.count() }
     }
 
-    fun calculateJ(folding: Folding): Double {
-        //add instances from folds to one big list of instances
-        val trainingInstances = mutableListOf<Instance>()
-        folding.folds.forEach { it.dataSet.forEach { trainingInstances.add(it) } }
+    fun calculateJ(folding: Folding, foldTest : Int): Double {
+        //add instances from test fold to a list of instances
+        val testingInstances = mutableListOf<Instance>()
+        folding.folds[0].dataSet.forEach { testingInstances.add(it) }
 
-        return calculateJ(trainingInstances)
+        return calculateJ(testingInstances)
     }
 
     fun calculateJ(instances: List<Instance>): Double {
@@ -179,50 +179,6 @@ class FlexNet (private val config : FlexNetConfig) {
 
         //join two terms
         JFunction += regularization
-        return JFunction
-    }
-
-    fun calculateJFromFolds(folds: MutableList<Fold>, foldTest : Int) : Double {
-        JFunction = 0.0
-        var count = 0
-        var regularization = 0.0
-        folds.forEachIndexed {
-            index, fold -> run {
-                if(index != foldTest-1) {
-                    fold.dataSet.forEach {
-                        instance -> run {
-                            count++
-                            propagate(instance.attributes)
-                            val correctOutputs = buildCorrectOutputs(instance.targetAttributeNeuron)
-                            for (output in 1..correctOutputs.count()) {
-                                JFunction += -correctOutputs[output-1]*(Math.log(outputLayer.neurons[output-1].activation))-(1-correctOutputs[output-1])*Math.log(1-outputLayer.neurons[output-1].activation)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        JFunction /= count
-
-        //calculate regularization term
-        var previousLayer = inputLayer
-        hiddenLayers.forEach { layer ->
-            layer.neurons.forEach {
-                it.thetas.forEachIndexed { index, theta ->
-                    if (index != previousLayer.neurons.lastIndex) regularization += Math.pow(theta, 2.0)
-                }
-            }
-            previousLayer = layer
-        }
-        outputLayer.neurons.forEach {
-            it.thetas.forEachIndexed { index, theta ->
-                if (index != previousLayer.neurons.lastIndex) regularization += Math.pow(theta, 2.0)
-            }
-        }
-        regularization = (regularization*config.lambda)/(2*count)
-        JFunction += regularization
-        //println(count)
-        //println("JFunction = $JFunction")
         return JFunction
     }
 

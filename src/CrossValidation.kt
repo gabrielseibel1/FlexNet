@@ -19,26 +19,30 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
                         println("\n\n//////////////// CONFIG ////////////////")
                         println(config)
 
-                        var done = false
-
-                        //train network one time with cross validation
-                        for (testFold in 1..k) {
-                            //add instances from training folds to one big list of instances called trainingInstances
-                            val trainingFolds = folding.folds.filterIndexed{ index, _ -> index != testFold - 1 }
-                            val trainingInstances = mutableListOf<Instance>()
-                            trainingFolds.forEach { it.dataSet.forEach { trainingInstances.add(it) } }
-
-                            trainer.trainBatch(flexNet, trainingInstances)
-                        }
+                        val listOfJs = mutableListOf<Double>()
+                        val listOfTrainedFoldings = mutableListOf<Double>()
+                        var trainedFoldings = 0
 
                         //repeat training until no more training is needed
-                        trainer.resetTrainingTriesCount()
+                        trainer.resetTriesCounter()
+                        var done = false
                         do {
-                            for (testFold in 1..k) {
-                                done = trainer.trainFolding(flexNet, folding.folds, testFold)
+
+                            for (testFold in 0 until k) {
+                                done = trainer.trainFolding(flexNet, folding, testFold)
+
+                                //add metrics to be plotted later
+                                trainedFoldings++
+                                listOfTrainedFoldings.add(trainedFoldings.toDouble())
+                                listOfJs.add(flexNet.calculateJ(folding, testFold))
+
                                 if (done) break
                             }
                         } while (!done)
+
+                        println("Trained foldings: $trainedFoldings")
+                        println("${listOfTrainedFoldings.size} _ ${listOfJs.size}")
+
 
                         //now calculate metrics for current config
 
@@ -47,9 +51,9 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
                         var sumOfPrecisions = 0.0
                         var sumOfRecalls = 0.0
 
-                        for (testFold in 1..k) {
-                            sumOfJs += flexNet.calculateJFromFolds(folding.folds, testFold)
-                            trainer.calculateConfusionMatrix(flexNet, folding.folds[testFold-1])
+                        for (testFold in 0 until k) {
+                            sumOfJs += flexNet.calculateJ(folding, testFold)
+                            trainer.calculateConfusionMatrix(flexNet, folding.folds[testFold])
                             sumOfAccuracies += trainer.getAccuracy(flexNet)
                             sumOfPrecisions += trainer.getPrecision(flexNet)
                             sumOfRecalls += trainer.getRecall(flexNet)
@@ -65,6 +69,9 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
                         println("Mean accuracy = $meanAccuracy")
                         println("Mean precision = $meanPrecision")
                         println("Mean recall = $meanRecall")
+
+                        //plot graph from data collected in training
+                        Plot(listOfTrainedFoldings.toDoubleArray(), listOfJs.toDoubleArray(), config.toString()).show()
                     }
                 }
             }

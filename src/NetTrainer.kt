@@ -5,29 +5,33 @@ class NetTrainer(val stepOfJCheck: Int = 50) {
     val MAX_NO_IMPROVEMENT_TRIES = 10
     var noImprovementCounter = 0
     val MIN_J_DIFFERENCE_PERCENTAGE = 0.00001
-    val MIN_GOOD_J = 0.01
+    val MIN_GOOD_J = 0.0001
 
     var confusionMatrix : MutableList<MutableList<Int>> = mutableListOf()
+
+    fun resetTriesCounter() {
+        triesCounter = 0
+    }
 
     /**
      * Trains a data set and returns if the training is done (true) or should train more (false)
      */
-    fun trainFolding(flexNet: FlexNet, folds: MutableList<Fold>, testFold: Int) : Boolean {
+    fun trainFolding(flexNet: FlexNet, folding: Folding, testFold: Int) : Boolean {
         var previousJ: Double
         var newJ: Double
 
         //add instances from training folds to one big list of instances called trainingInstances
-        val trainingFolds = folds.filterIndexed{ index, _ -> index != testFold - 1 }
+        val trainingFolds = folding.folds.filterIndexed{ index, _ -> index != testFold - 1 }
         val trainingInstances = mutableListOf<Instance>()
         trainingFolds.forEach { it.dataSet.forEach { trainingInstances.add(it) } }
 
         //separate instances in (trainingInstances.size/stepOfJCheck) small batches
         (0 until (trainingInstances.size/stepOfJCheck)).forEach {
             //train batch
-            previousJ = flexNet.calculateJFromFolds(folds, testFold)
+            previousJ = flexNet.calculateJ(folding, testFold)
             val batch = buildBatch(trainingInstances, it)
             trainBatch(flexNet, batch)
-            newJ = flexNet.calculateJFromFolds(folds, testFold)
+            newJ = flexNet.calculateJ(folding, testFold)
 
             //after each batch is trained, checks if should end training
             if (shouldEndTraining(previousJ, newJ)) return true
@@ -36,9 +40,9 @@ class NetTrainer(val stepOfJCheck: Int = 50) {
         //trains rest of instances that didn't fit in batches (if there is any)
         val remainingBatch = trainingInstances.subList(trainingInstances.size - (trainingInstances.size % stepOfJCheck), trainingInstances.lastIndex)
         if (remainingBatch.isNotEmpty()) {
-            previousJ = flexNet.calculateJFromFolds(folds, testFold)
+            previousJ = flexNet.calculateJ(folding, testFold)
             trainBatch(flexNet, remainingBatch)
-            newJ = flexNet.calculateJFromFolds(folds, testFold)
+            newJ = flexNet.calculateJ(folding, testFold)
 
             //after rest of instances are trained, checks if should end training
             if (shouldEndTraining(previousJ, newJ)) return true
@@ -51,7 +55,7 @@ class NetTrainer(val stepOfJCheck: Int = 50) {
     /**
      * Trains a batch of instances
      */
-    fun trainBatch(flexNet: FlexNet, batch: List<Instance>) {
+    private fun trainBatch(flexNet: FlexNet, batch: List<Instance>) {
         batch.forEach{
             flexNet.forthAndBackPropagate(it)
             flexNet.updateThetas()
@@ -192,14 +196,10 @@ fun main(args: Array<String>) {
     flexNet.print()
     val instance1 = Instance(mutableListOf(0.1), "Class1", 0)
     val instance2 = Instance(mutableListOf(0.2), "Class2", 1)
-    val foldA = Fold(listOf(instance1, instance2))
     val instance3 = Instance(mutableListOf(0.3), "Class1", 0)
     val instance4 = Instance(mutableListOf(0.4), "Class2", 1)
-    val foldB = Fold(listOf(instance3, instance4))
     val instance5 = Instance(mutableListOf(0.5), "Class1", 0)
     val instance6 = Instance(mutableListOf(0.6), "Class2", 1)
-    val foldC = Fold(listOf(instance5, instance6))
-    val folds = mutableListOf(foldA, foldB, foldC)
 
-    netTrainer.trainFolding(flexNet, folds, 1)
+    netTrainer.trainFolding(flexNet, Folding(mutableListOf(instance1, instance2, instance3, instance4, instance5, instance6), 5), 1)
 }
