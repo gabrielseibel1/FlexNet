@@ -91,7 +91,7 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
                 }
             }
         }
-        println("\n\n!!!!!!!!!! BEST CONFIGS !!!!!!!!!!")
+        println("\n\n!!!!!!!!!! BEST CONFIGS (${bestConfigs.size}) !!!!!!!!!!")
         println(bestConfigs)
     }
 
@@ -111,7 +111,7 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
 
             //evaluate if should replace worst config for new one
             if (accuracy > bestConfigs[worstConfigIndex].second)
-                bestConfigs.add(element = Pair(config, accuracy), index = worstConfigIndex)
+                bestConfigs[worstConfigIndex] = Pair(config, accuracy)
         }
     }
 }
