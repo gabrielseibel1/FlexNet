@@ -1,6 +1,6 @@
 class NetTrainer(val stepOfJCheck: Int = 50) {
 
-    private val MAX_TRIES = 100000
+    private val MAX_TRIES = 10000
     var triesCounter: Int = 0
     private val MAX_NO_IMPROVEMENT_TRIES = 30
     var noImprovementCounter = 0

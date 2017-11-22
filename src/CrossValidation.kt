@@ -3,15 +3,17 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
     private val dr = DataReader(dataFile, targetPosition, hasId)
     private val folding = Folding(dr.getTrainingDataSet(), k)
     private val trainer = NetTrainer()
+    private val bestConfigs = mutableListOf<Pair<FlexNetConfig, Double>>()
+    private val MAX_BEST_CONFIGS_LIST_SIZE = 10
 
     fun doCrossValidation() {
-        for (numberOfHiddenLayers in 1..1) {
+        for (numberOfHiddenLayers in 1..4) {
             config.hiddenLayers = numberOfHiddenLayers
-            for (numberOfNeurons in 2..2) {
+            for (numberOfNeurons in 1..4) {
                 config.neuronsPerHiddenLayer = numberOfNeurons
-                for(lambda in 1..1) {
-                    config.lambda = lambda/10000000.0
-                    for(alpha in 1..6) {
+                for(lambda in 1..5) {
+                    config.lambda = lambda/1000.0
+                    for(alpha in 1..10) {
                         config.alpha = alpha/10.0
 
                         //here we have a formed configuration to use an iterate over
@@ -56,7 +58,7 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
                         println("${listOfTrainedFoldings.size} _ ${listOfJs.size}")
 
 
-                        //now calculate metrics for current config
+                        //now calculate final metrics for current config
 
                         var sumOfJs = 0.0
                         var sumOfAccuracies = 0.0
@@ -82,11 +84,34 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
                         println("Mean precision = $meanPrecision")
                         println("Mean recall = $meanRecall")
 
+                        saveIfGoodConfig(config, meanAccuracy)
                         //plot graph from data collected in training
-                        Plot(listOfTrainedFoldings.toDoubleArray(), listOfJs.toDoubleArray(), config.toString()).show()
+                        //Plot(listOfTrainedFoldings.toDoubleArray(), listOfJs.toDoubleArray(), config.toString()).show()
                     }
                 }
             }
+        }
+        println("\n\n!!!!!!!!!! BEST CONFIGS !!!!!!!!!!")
+        println(bestConfigs)
+    }
+
+    fun saveIfGoodConfig(config: FlexNetConfig, accuracy: Double) {
+
+        if (bestConfigs.size < MAX_BEST_CONFIGS_LIST_SIZE) { //list of best configs has space
+            bestConfigs.add(Pair(config, accuracy))
+
+        } else { //list is full
+
+            //find worst config of the best configs
+            var worstConfigIndex = 0
+            bestConfigs.forEachIndexed { index, pair ->
+                if (pair.second < bestConfigs[worstConfigIndex].second)
+                    worstConfigIndex = index
+            }
+
+            //evaluate if should replace worst config for new one
+            if (accuracy > bestConfigs[worstConfigIndex].second)
+                bestConfigs.add(element = Pair(config, accuracy), index = worstConfigIndex)
         }
     }
 }
