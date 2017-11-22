@@ -1,7 +1,7 @@
 import org.math.plot.*
 import javax.swing.JFrame
 
-class Plot(x: DoubleArray, y: DoubleArray) {
+class Plot(x: DoubleArray, y: DoubleArray, val title: String = "A Plot") {
 
     private val plot = Plot2DPanel()
 
@@ -12,7 +12,7 @@ class Plot(x: DoubleArray, y: DoubleArray) {
 
     fun show() {
         // put the PlotPanel in a JFrame, as a JPanel
-        val frame = JFrame("a plot panel")
+        val frame = JFrame(title)
         frame.contentPane = plot
         frame.isVisible = true
     }
