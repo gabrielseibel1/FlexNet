@@ -23,6 +23,11 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
                         val listOfTrainedFoldings = mutableListOf<Double>()
                         var trainedFoldings = 0
 
+                        //get initial J
+                        flexNet.propagate(folding.dataSet[0].attributes)
+                        listOfTrainedFoldings.add(trainedFoldings.toDouble())
+                        listOfJs.add(flexNet.calculateJ(folding, 0))
+
                         //repeat training until no more training is needed
                         trainer.resetTriesCounter()
                         var done = false
