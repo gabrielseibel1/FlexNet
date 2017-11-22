@@ -99,7 +99,7 @@ class FlexNet (private val config : FlexNetConfig) {
         return allThetas.toList()
     }
 
-    fun getOutputs(): List<Double> {
+    private fun getOutputs(): List<Double> {
         val outputs = mutableListOf<Double>()
         outputLayer.neurons.forEach {
                 outputs.add(it.activation)
@@ -131,6 +131,14 @@ class FlexNet (private val config : FlexNetConfig) {
         hiddenLayers
                 .flatMap { it.neurons }
                 .forEach { numberOfNetThetas+= it.thetas.count() }
+    }
+
+    fun calculateJ(folding: Folding): Double {
+        //add instances from folds to one big list of instances
+        val trainingInstances = mutableListOf<Instance>()
+        folding.folds.forEach { it.dataSet.forEach { trainingInstances.add(it) } }
+
+        return calculateJ(trainingInstances)
     }
 
     fun calculateJ(instances: List<Instance>): Double {
@@ -214,7 +222,7 @@ class FlexNet (private val config : FlexNetConfig) {
         regularization = (regularization*config.lambda)/(2*count)
         JFunction += regularization
         //println(count)
-        println("JFunction = $JFunction")
+        //println("JFunction = $JFunction")
         return JFunction
     }
 
@@ -233,8 +241,8 @@ class FlexNet (private val config : FlexNetConfig) {
         outputLayer.activate(hiddenLayers.last())
     }
 
-    fun backPropagate(correctOutput: Int) {
-        val correctOutputs = buildCorrectOutputs(correctOutput)
+    fun backPropagate(correctNeuronToActivate: Int) {
+        val correctOutputs = buildCorrectOutputs(correctNeuronToActivate)
         var previousLayer = outputLayer
         outputLayer.calculateDeltasFromCorrectOutputs(correctOutputs)
         hiddenLayers.asReversed().forEach {

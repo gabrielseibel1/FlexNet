@@ -1,15 +1,13 @@
 class NetTrainer(val stepOfJCheck: Int = 50) {
 
-    val MAX_TRIES = 500
+    val MAX_TRIES = 1000
     var triesCounter: Int = 0
+    val MAX_NO_IMPROVEMENT_TRIES = 10
+    var noImprovementCounter = 0
     val MIN_J_DIFFERENCE_PERCENTAGE = 0.00001
-    val MIN_GOOD_J = 0.55
+    val MIN_GOOD_J = 0.01
 
     var confusionMatrix : MutableList<MutableList<Int>> = mutableListOf()
-
-    fun resetTrainingTriesCount() {
-        triesCounter = 0
-    }
 
     /**
      * Trains a data set and returns if the training is done (true) or should train more (false)
@@ -35,10 +33,6 @@ class NetTrainer(val stepOfJCheck: Int = 50) {
             if (shouldEndTraining(previousJ, newJ)) return true
         }
 
-        //23-3 = 20                                          __ __ __
-        //0 1 2 3 4 5 6 7 8  9 10 11 12 13 14 15 16 17 18 19 20 21 22
-        //1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
-
         //trains rest of instances that didn't fit in batches (if there is any)
         val remainingBatch = trainingInstances.subList(trainingInstances.size - (trainingInstances.size % stepOfJCheck), trainingInstances.lastIndex)
         if (remainingBatch.isNotEmpty()) {
@@ -61,7 +55,7 @@ class NetTrainer(val stepOfJCheck: Int = 50) {
         batch.forEach{
             flexNet.forthAndBackPropagate(it)
             flexNet.updateThetas()
-            println("Predicted class is ${flexNet.getPredictedClass()}")
+            //println("Predicted class is ${flexNet.getPredictedClass()}")
         }
     }
 
@@ -71,21 +65,27 @@ class NetTrainer(val stepOfJCheck: Int = 50) {
     private fun buildBatch(instances: List<Instance>, batchNumber: Int): List<Instance> =
             instances.subList(batchNumber*stepOfJCheck, (batchNumber+1)*stepOfJCheck-1)
 
-    private fun shouldEndTraining(previousJ: Double, newJ: Double): Boolean {
-        return isJGoodEnough(previousJ, newJ) or triedEnoughTimes()
+    private fun shouldEndTraining(previousJ: Double, newJ: Double): Boolean =
+            isJGoodEnough(newJ) or triedEnoughTimes() or isStuckNotImproving(previousJ, newJ)
+
+    private fun isStuckNotImproving(previousJ: Double, newJ: Double): Boolean {
+
+        if (Math.abs((previousJ - newJ)/previousJ) <= MIN_J_DIFFERENCE_PERCENTAGE)
+            noImprovementCounter++
+        else
+            noImprovementCounter = 0
+
+        return if (noImprovementCounter >= MAX_NO_IMPROVEMENT_TRIES) {
+            println("Training stopped: low J difference percentage (${Math.abs((previousJ - newJ)/previousJ)})")
+            true
+        } else false
     }
 
-    private fun isJGoodEnough(previousJ: Double, newJ: Double): Boolean {
-        if (newJ <= MIN_GOOD_J) {
+    private fun isJGoodEnough(newJ: Double): Boolean {
+        return if (newJ <= MIN_GOOD_J) {
             println("Training stopped: found good J ($newJ)")
-            return true
-
-        } else if (Math.abs((previousJ - newJ)/previousJ) <= MIN_J_DIFFERENCE_PERCENTAGE) {
-            println("Training stopped: low J difference percentage (${Math.abs((previousJ - newJ)/previousJ)})")
-            return true
-        } else
-            return false
-
+            true
+        } else false
     }
 
     private fun triedEnoughTimes(): Boolean {
@@ -112,8 +112,8 @@ class NetTrainer(val stepOfJCheck: Int = 50) {
             //println(instance)
             flexNet.propagate(instance.attributes)
             //println("Target Attribute: "+instance)
-            println("Classe predita: "+flexNet.getPredictedClass()+" Classe esperada: "+instance.targetAttributeNeuron)
-            println((flexNet.getPredictedClass()==instance.targetAttributeNeuron))
+            //println("Classe predita: "+flexNet.getPredictedClass()+" Classe esperada: "+instance.targetAttributeNeuron)
+            //println((flexNet.getPredictedClass()==instance.targetAttributeNeuron))
             confusionMatrix[instance.targetAttributeNeuron][flexNet.getPredictedClass()]++
         }
         //println(confusionMatrix)
