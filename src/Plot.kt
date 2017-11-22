@@ -1,7 +1,7 @@
 import org.math.plot.*
 import javax.swing.JFrame
 
-class Plot(x: DoubleArray, y: DoubleArray, val title: String = "A Plot") {
+class Plot(x: DoubleArray, y: DoubleArray, private val title: String = "A Plot") {
 
     private val plot = Plot2DPanel()
 

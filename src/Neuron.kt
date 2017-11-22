@@ -9,7 +9,7 @@ class Neuron (thetaCount: Int){
     init {
         //thetas random initialization
         for (index in 1..thetaCount) {
-            thetas.add((-20..20).random().toDouble()/10)
+            thetas.add((-1..1).random().toDouble()*1.2345678910111213141516171819)
         }
     }
 
