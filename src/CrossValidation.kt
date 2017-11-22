@@ -3,7 +3,7 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
     private val dr = DataReader(dataFile, targetPosition, hasId)
     private val folding = Folding(dr.getTrainingDataSet(), k)
     private val trainer = NetTrainer()
-    private val bestConfigs = mutableListOf<Pair<FlexNetConfig, Double>>()
+    private var bestConfigs = mutableListOf<Pair<FlexNetConfig, Double>>()
     private val MAX_BEST_CONFIGS_LIST_SIZE = 10
 
     fun doCrossValidation() {
@@ -15,7 +15,6 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
                     config.lambda = lambda/1000.0
                     for(alpha in 1..10) {
                         config.alpha = alpha/10.0
-
                         //here we have a formed configuration to use an iterate over
                         val flexNet = FlexNet(config)
                         println("\n\n//////////////// CONFIG ////////////////")
@@ -84,7 +83,7 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
                         println("Mean precision = $meanPrecision")
                         println("Mean recall = $meanRecall")
 
-                        saveIfGoodConfig(config, meanAccuracy)
+                        saveIfGoodConfig(config.copy(), meanAccuracy)
                         //plot graph from data collected in training
                         //Plot(listOfTrainedFoldings.toDoubleArray(), listOfJs.toDoubleArray(), config.toString()).show()
                     }
@@ -118,13 +117,13 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
 
 fun main(args : Array<String>) {
     val config = FlexNetConfig(
-            inputNeurons = 13,
+            inputNeurons = 9,
             numberOfTargetAttributeClassesInDataSet = 3,
             hiddenLayers = 1,
             neuronsPerHiddenLayer = 3,
             lambda = 0.00001
     )
-    val cv = CrossValidation("./data/wine.data", 10, config, 0, false)
+    val cv = CrossValidation("./data/cmc.data", 10, config, 9, false)
     cv.doCrossValidation()
     println("ok")
 }
