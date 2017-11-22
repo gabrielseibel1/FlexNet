@@ -33,16 +33,19 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
                         var done = false
                         do {
 
+                            var meanJOfFolding = 0.0
                             for (testFold in 0 until k) {
                                 done = trainer.trainFolding(flexNet, folding, testFold)
 
                                 //add metrics to be plotted later
                                 trainedFoldings++
-                                listOfTrainedFoldings.add(trainedFoldings.toDouble())
-                                listOfJs.add(flexNet.calculateJ(folding, testFold))
-
+                                meanJOfFolding += flexNet.calculateJ(folding, testFold)
                                 if (done) break
                             }
+                            meanJOfFolding /= k
+                            listOfTrainedFoldings.add(trainedFoldings.toDouble())
+                            listOfJs.add(meanJOfFolding)
+
                         } while (!done)
 
                         println("Trained foldings: $trainedFoldings")
