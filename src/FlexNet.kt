@@ -136,7 +136,7 @@ class FlexNet (private val config : FlexNetConfig) {
     fun calculateJ(folding: Folding, foldTest : Int): Double {
         //add instances from test fold to a list of instances
         val testingInstances = mutableListOf<Instance>()
-        folding.folds[0].dataSet.forEach { testingInstances.add(it) }
+        folding.folds[foldTest].dataSet.forEach { testingInstances.add(it) }
 
         return calculateJ(testingInstances)
     }
