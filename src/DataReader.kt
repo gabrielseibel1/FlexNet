@@ -4,10 +4,10 @@ import java.util.*
 class DataReader (val file : String, targetPosition : Int, hasId : Boolean) {
 
     private val dataString : String = File(file).readText()
-    private val dataSet : MutableList<List<String>> = mutableListOf()
-    private val dataSetNormalized : MutableList<Instance> = mutableListOf()
-    private val trainingDataSet : MutableList<Instance> = mutableListOf()
-    private val testDataSet : MutableList<Instance> = mutableListOf()
+    val dataSet : MutableList<List<String>> = mutableListOf()
+    val dataSetNormalized : MutableList<Instance> = mutableListOf()
+    val trainingDataSet : MutableList<Instance> = mutableListOf()
+    val testDataSet : MutableList<Instance> = mutableListOf()
 
     init {
         val featuresNormalizer = FeaturesNormalizer(targetPosition)
@@ -38,20 +38,9 @@ class DataReader (val file : String, targetPosition : Int, hasId : Boolean) {
             }
         }
     }
-
-    fun getDataSet() : MutableList<List<String>> {
-        return dataSet
-    }
-
-    fun getTrainingDataSet() : MutableList<Instance> {
-        return trainingDataSet
-    }
-
-    fun getTestDataSet() : MutableList<Instance> {
-        return testDataSet
-    }
 }
 
 fun main(args : Array<String>) {
     val dataReader : DataReader = DataReader("./data/haberman.data", 3, true)
+    println(dataReader)
 }

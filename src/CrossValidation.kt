@@ -1,7 +1,7 @@
 class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfig, targetPosition : Int, hasId : Boolean) {
 
     private val dr = DataReader(dataFile, targetPosition, hasId)
-    private val folding = Folding(dr.getTrainingDataSet(), k)
+    private val folding = Folding(dr.trainingDataSet, k)
     private val trainer = NetTrainer()
     private var bestConfigs = mutableListOf<Pair<FlexNetConfig, Double>>()
     private val MAX_BEST_CONFIGS_LIST_SIZE = 10
@@ -117,13 +117,13 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
 
 fun main(args : Array<String>) {
     val config = FlexNetConfig(
-            inputNeurons = 9,
+            inputNeurons = 13,
             numberOfTargetAttributeClassesInDataSet = 3,
             hiddenLayers = 1,
             neuronsPerHiddenLayer = 3,
             lambda = 0.00001
     )
-    val cv = CrossValidation("./data/cmc.data", 10, config, 9, false)
+    val cv = CrossValidation("./data/wine.data", 10, config, 0, false)
     cv.doCrossValidation()
     println("ok")
 }
