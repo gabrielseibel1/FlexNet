@@ -14,7 +14,7 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
                 for(lambda in 1..5) {
                     config.lambda = lambda/1000.0
                     for(alpha in 1..10) {
-                        config.alpha = alpha/10.0
+                        config.alpha = alpha/100.0
                         //here we have a formed configuration to use an iterate over
                         val flexNet = FlexNet(config)
                         println("\n\n//////////////// CONFIG ////////////////")
@@ -117,13 +117,13 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
 
 fun main(args : Array<String>) {
     val config = FlexNetConfig(
-            inputNeurons = 13,
-            numberOfTargetAttributeClassesInDataSet = 3,
+            inputNeurons = 3,
+            numberOfTargetAttributeClassesInDataSet = 2,
             hiddenLayers = 1,
             neuronsPerHiddenLayer = 3,
             lambda = 0.00001
     )
-    val cv = CrossValidation("./data/wine.data", 10, config, 0, false)
+    val cv = CrossValidation("./data/haberman.data", 10, config, 3, false)
     cv.doCrossValidation()
     println("ok")
 }
