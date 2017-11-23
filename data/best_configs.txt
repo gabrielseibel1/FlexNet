@@ -1,69 +1,13 @@
 WINE
-alpha 0.1 a 1.0
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=3, inputNeurons=13, numberOfTargetAttributeClassesInDataSet=3, lambda=0.002, alpha=0.1), 1.0),
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=4, inputNeurons=13, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.1), 1.0),
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=2, inputNeurons=13, numberOfTargetAttributeClassesInDataSet=3, lambda=0.002, alpha=0.1), 1.0),
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=4, inputNeurons=13, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.2), 1.0),
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=4, inputNeurons=13, numberOfTargetAttributeClassesInDataSet=3, lambda=0.002, alpha=0.1), 1.0),
-(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=4, inputNeurons=13, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.1), 1.0),
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=3, inputNeurons=13, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.1), 1.0),
-(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=4, inputNeurons=13, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.4), 1.0),
-(FlexNetConfig(hiddenLayers=3, neuronsPerHiddenLayer=2, inputNeurons=13, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.1), 1.0),
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=2, inputNeurons=13, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.1), 1.0)
-
-HABERMAN
-alpha 0.1 a 1.0
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=3, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.7), 0.7420000000000001)
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=3, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.002, alpha=0.3), 0.7420000000000001)
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=1, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.002, alpha=0.3), 0.7420000000000001)
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=2, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.1), 0.7460000000000001)
-****************************************************************************************************************************************************************
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=4, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.1), 0.7501666666666668)
-****************************************************************************************************************************************************************
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=3, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.2), 0.7420000000000001)
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=4, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.6), 0.7420000000000001)
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=2, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.002, alpha=0.2), 0.7420000000000001)
-(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=4, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.1), 0.7421666666666668)
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=3, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.1), 0.7460000000000001)
-
-alpha 0.01 a 0.1
-(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=2, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.07), 0.75)
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=4, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.04), 0.75)
-(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=3, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.02), 0.75)
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=3, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.08), 0.75)
-(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=3, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.03), 0.75)
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=2, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.07), 0.75)
-(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=3, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.09), 0.75)
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=4, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.002, alpha=0.1), 0.75)
-(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=2, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.02), 0.75)
-(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=2, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.05), 0.75)
-
-WBDC
-alpha 0.1 a 1.0
-(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.3), 0.9889855072463767)
-(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.5), 0.9889855072463767)
-(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.002, alpha=0.2), 0.9889855072463767)
-(FlexNetConfig(hiddenLayers=3, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.5), 0.9889855072463767)
-(FlexNetConfig(hiddenLayers=3, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.003, alpha=0.1), 0.9889855072463767)
-****************************************************************************************************************************************************************
-(FlexNetConfig(hiddenLayers=4, neuronsPerHiddenLayer=3, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.002, alpha=0.1), 0.9912077294685989)
-****************************************************************************************************************************************************************
-(FlexNetConfig(hiddenLayers=4, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.003, alpha=0.1), 0.9889855072463767)
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=2, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.4), 0.9867632850241546)
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=3, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.3), 0.9867632850241546)
-(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=3, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.3), 0.9867632850241546)
-
-CMC
-alpha 0.1 a 1.0
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=1, inputNeurons=9, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.1), 0.4914892075909025)
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=2, inputNeurons=9, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.1), 0.5152832101984643)
-(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=3, inputNeurons=9, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.1), 0.4923511516731856)
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=2, inputNeurons=9, numberOfTargetAttributeClassesInDataSet=3, lambda=0.002, alpha=0.1), 0.49907286686947716)
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=3, inputNeurons=9, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.1), 0.4914892075909025)
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=4, inputNeurons=9, numberOfTargetAttributeClassesInDataSet=3, lambda=0.002, alpha=0.1), 0.4863899753730263)
-****************************************************************************************************************************************************************
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=4, inputNeurons=9, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.1), 0.5262856728958424)
-****************************************************************************************************************************************************************
-(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=1, inputNeurons=9, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.1), 0.4923511516731856)
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=3, inputNeurons=9, numberOfTargetAttributeClassesInDataSet=3, lambda=0.002, alpha=0.1), 0.49485730841663045)
-(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=3, inputNeurons=9, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.2), 0.4872953788208026)
+(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.004, alpha=0.01), Metrics(j=0.7188289346580408, accuracy=0.8530917874396136, precision=0.8050493605194157, recall=0.811305476272588, standardDeviationJ=0.5644719573909135, standardDeviationAccuracy=0.15421072959127632, standardDeviationPrecision=0.2617003531836728, standardDeviationRecall=0.2118632102342849))
+(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.004, alpha=0.01), Metrics(j=0.784604896105281, accuracy=0.855024154589372, precision=0.7910483057794985, recall=0.8303375163153702, standardDeviationJ=0.4991888381866463, standardDeviationAccuracy=0.14961058791913262, standardDeviationPrecision=0.26782690718531665, standardDeviationRecall=0.18776130972062102))
+(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.005, alpha=0.009), Metrics(j=0.8143575661335298, accuracy=0.8593719806763285, precision=0.7552030669883004, recall=0.8022690850274711, standardDeviationJ=0.5298911782772011, standardDeviationAccuracy=0.14928004377138426, standardDeviationPrecision=0.29845722488833454, standardDeviationRecall=0.22648787282326802))
+(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.01), Metrics(j=0.5462885581952138, accuracy=0.8896618357487922, precision=0.8545976645159846, recall=0.8649841339617476, standardDeviationJ=0.37938686095079743, standardDeviationAccuracy=0.10792563179276961, standardDeviationPrecision=0.19899590876864828, standardDeviationRecall=0.1436195378214054))
+(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.004, alpha=0.009), Metrics(j=0.7810196025030005, accuracy=0.8619806763285024, precision=0.8386231629341211, recall=0.8283658357261897, standardDeviationJ=0.5465499551630701, standardDeviationAccuracy=0.1388065148146989, standardDeviationPrecision=0.20979684543328442, standardDeviationRecall=0.17572885545482927))
+******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+(FlexNetConfig(hiddenLayers=3, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.002, alpha=0.01), Metrics(j=0.40118628872627504, accuracy=0.9235265700483092, precision=0.8905000697964801, recall=0.908272909095964, standardDeviationJ=0.4150825126437335, standardDeviationAccuracy=0.11872139439748902, standardDeviationPrecision=0.21165208090094215, standardDeviationRecall=0.1516181111727024))
+******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.002, alpha=0.01), Metrics(j=0.6174985329297471, accuracy=0.8705797101449275, precision=0.8238142719871708, recall=0.8098187068349606, standardDeviationJ=0.5347721172669162, standardDeviationAccuracy=0.13388867560476492, standardDeviationPrecision=0.25699490329676805, standardDeviationRecall=0.20723086030133525))
+(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.002, alpha=0.009), Metrics(j=0.5398659941192229, accuracy=0.8879710144927537, precision=0.866956763327923, recall=0.8700455455887145, standardDeviationJ=0.5210964365630928, standardDeviationAccuracy=0.1492539855834678, standardDeviationPrecision=0.21807958395409388, standardDeviationRecall=0.18096715944065284))
+(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.005, alpha=0.01), Metrics(j=0.7680557059260704, accuracy=0.8768599033816427, precision=0.8421955180344399, recall=0.8483444135107662, standardDeviationJ=0.3561849514906611, standardDeviationAccuracy=0.09816672633512573, standardDeviationPrecision=0.18694779237261655, standardDeviationRecall=0.14458811307034597))
+(FlexNetConfig(hiddenLayers=3, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.005, alpha=0.009), Metrics(j=0.7094262345790341, accuracy=0.8864734299516909, precision=0.824813022585346, recall=0.8546463747768925, standardDeviationJ=0.5413119322863273, standardDeviationAccuracy=0.14474474068805077, standardDeviationPrecision=0.2736904546073173, standardDeviationRecall=0.19162456314103873))

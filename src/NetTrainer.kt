@@ -27,13 +27,15 @@ class NetTrainer(val stepOfJCheck: Int = 50,
             val batch = buildBatch(trainingInstances, it)
             trainBatch(flexNet, batch)
             newJ = flexNet.calculateJ(testInstances)
+            println("Count: $it | J: $newJ")
 
             //catalogs J and number of instances trained
             if (points.isEmpty()) {
                 points.add(Pair(batch.size.toDouble(), newJ))
+                //println(Pair(batch.size.toDouble(), newJ))
             } else {
                 points.add(Pair(points.last().first + stepOfJCheck, newJ))
-                println(Pair(points.last().first + stepOfJCheck, newJ))
+                //println(Pair(points.last().first + stepOfJCheck, newJ))
             }
 
             //after each batch is trained, checks if should end training
