@@ -1,4 +1,5 @@
 WINE
+alpha 0.1 a 1.0
 (FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=3, inputNeurons=13, numberOfTargetAttributeClassesInDataSet=3, lambda=0.002, alpha=0.1), 1.0),
 (FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=4, inputNeurons=13, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.1), 1.0),
 (FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=2, inputNeurons=13, numberOfTargetAttributeClassesInDataSet=3, lambda=0.002, alpha=0.1), 1.0),
@@ -11,6 +12,7 @@ WINE
 (FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=2, inputNeurons=13, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.1), 1.0)
 
 HABERMAN
+alpha 0.1 a 1.0
 (FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=3, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.7), 0.7420000000000001)
 (FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=3, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.002, alpha=0.3), 0.7420000000000001)
 (FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=1, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.002, alpha=0.3), 0.7420000000000001)
@@ -24,7 +26,20 @@ HABERMAN
 (FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=4, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.1), 0.7421666666666668)
 (FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=3, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.1), 0.7460000000000001)
 
+alpha 0.01 a 0.1
+(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=2, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.07), 0.75)
+(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=4, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.04), 0.75)
+(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=3, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.02), 0.75)
+(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=3, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.08), 0.75)
+(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=3, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.03), 0.75)
+(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=2, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.07), 0.75)
+(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=3, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.09), 0.75)
+(FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=4, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.002, alpha=0.1), 0.75)
+(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=2, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.02), 0.75)
+(FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=2, inputNeurons=3, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.05), 0.75)
+
 WBDC
+alpha 0.1 a 1.0
 (FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.3), 0.9889855072463767)
 (FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.5), 0.9889855072463767)
 (FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=4, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.002, alpha=0.2), 0.9889855072463767)
@@ -39,6 +54,7 @@ WBDC
 (FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=3, inputNeurons=30, numberOfTargetAttributeClassesInDataSet=2, lambda=0.001, alpha=0.3), 0.9867632850241546)
 
 CMC
+alpha 0.1 a 1.0
 (FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=1, inputNeurons=9, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.1), 0.4914892075909025)
 (FlexNetConfig(hiddenLayers=1, neuronsPerHiddenLayer=2, inputNeurons=9, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.1), 0.5152832101984643)
 (FlexNetConfig(hiddenLayers=2, neuronsPerHiddenLayer=3, inputNeurons=9, numberOfTargetAttributeClassesInDataSet=3, lambda=0.001, alpha=0.1), 0.4923511516731856)
