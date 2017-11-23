@@ -2,7 +2,7 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
 
     private val dr = DataReader(dataFile, targetPosition, hasId)
     private val folding = Folding(dr.trainingDataSet, k)
-    private val trainer = NetTrainer()
+    private val trainer = NetTrainer(MAX_TRIES = 1000)
     private var bestConfigs = mutableListOf<Pair<FlexNetConfig, Metrics>>()
     private val MAX_BEST_CONFIGS_LIST_SIZE = 10
 
@@ -14,121 +14,81 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
                 for(lambda in 1..5) {
                     config.lambda = lambda/1000.0
                     for(alpha in 1..10) {
-                        config.alpha = alpha/100.0
-                        //here we have a formed configuration to use an iterate over
-                        val flexNet = FlexNet(config)
-                        println("\n\n//////////////// CONFIG ////////////////")
+                        config.alpha = alpha/1000.0
+
+                        println("\n\n//////////////////// CONFIG ////////////////////")
                         println(config)
 
-                        val listOfJs = mutableListOf<Double>()
-                        val listOfTrainedFoldings = mutableListOf<Double>()
-                        var trainedFoldings = 0
+                        val metricsList = mutableListOf<Metrics>()
+                        for (testFold in 0 until k) {
+                            trainer.resetTriesCounter()
+                            val flexNet = FlexNet(config)
 
-                        //get initial J
-                        flexNet.propagate(folding.dataSet[0].attributes)
-                        listOfTrainedFoldings.add(trainedFoldings.toDouble())
-                        listOfJs.add(flexNet.calculateJ(folding, 0))
-
-                        //repeat training until no more training is needed
-                        trainer.resetTriesCounter()
-                        var done = false
-                        do {
-
-                            var meanJOfFoldings = 0.0
-                            var foldingsCount = 0
-                            for (testFold in 0 until k) {
+                            var done = false
+                            do {
                                 done = trainer.trainFolding(flexNet, folding, testFold)
+                            } while (!done)
 
-                                //add metrics to be plotted later
-                                trainedFoldings++
-                                meanJOfFoldings += flexNet.calculateJ(folding, testFold)
+                            metricsList.add(calculateMetrics(flexNet, folding, testFold))
+                        }
+                        //take mean and std dev of metrics
+                        val meanMetrics = calculateMeanMetrics(metricsList.toList())
 
-                                //counts how many foldings in this round we're trained to calculate mean J
-                                foldingsCount++
-                                if (done) break
-                            }
-                            meanJOfFoldings /= foldingsCount
-                            listOfTrainedFoldings.add(trainedFoldings.toDouble())
-                            listOfJs.add(meanJOfFoldings)
+                        println("Mean cost (J) = ${meanMetrics.j}")
+                        println("Mean accuracy = ${meanMetrics.accuracy}")
+                        println("Mean precision = ${meanMetrics.precision}")
+                        println("Mean recall = ${meanMetrics.recall}")
+                        println("Stadard Deviation cost (J) = ${meanMetrics.standardDeviationJ}")
+                        println("Stadard Deviation accuracy = ${meanMetrics.standardDeviationAccuracy}")
+                        println("Stadard Deviation precision = ${meanMetrics.standardDeviationPrecision}")
+                        println("Stadard Deviation recall = ${meanMetrics.standardDeviationRecall}")
 
-                        } while (!done)
-
-                        println("Trained foldings: $trainedFoldings")
-                        println("${listOfTrainedFoldings.size} _ ${listOfJs.size}")
-
-
-                        //now calculate final metrics for current config
-
-                        //take means of metrics
-                        val metrics  = calculateMetrics(flexNet)
-
-                        println("Mean cost (J) = ${metrics.meanJ}")
-                        println("Mean accuracy = ${metrics.meanAccuracy}")
-                        println("Mean precision = ${metrics.meanPrecision}")
-                        println("Mean recall = ${metrics.meanRecall}")
-                        println("Stadard Deviation cost (J) = ${metrics.standardDeviationJ}")
-                        println("Stadard Deviation accuracy = ${metrics.standardDeviationAccuracy}")
-                        println("Stadard Deviation precision = ${metrics.standardDeviationPrecision}")
-                        println("Stadard Deviation recall = ${metrics.standardDeviationRecall}")
-
-                        saveIfGoodConfig(config.copy(), metrics)
-                        //plot graph from data collected in training
-                        //Plot(listOfTrainedFoldings.toDoubleArray(), listOfJs.toDoubleArray(), config.toString()).show()
+                        saveIfGoodConfig(config.copy(), meanMetrics)
                     }
                 }
             }
         }
         println("\n\n!!!!!!!!!! BEST CONFIGS (${bestConfigs.size}) !!!!!!!!!!")
-        println(bestConfigs)
+        println(bestConfigs.joinToString(separator = "\n"))
     }
 
-    private fun calculateMetrics(flexNet : FlexNet) : Metrics {
-        var sumOfJs = 0.0
-        var js = mutableListOf<Double>()
-        var accuracies = mutableListOf<Double>()
-        var precisions = mutableListOf<Double>()
-        var recalls = mutableListOf<Double>()
-        var sumOfAccuracies = 0.0
-        var sumOfPrecisions = 0.0
-        var sumOfRecalls = 0.0
+    private fun calculateMetrics(flexNet: FlexNet, folding: Folding, testFold: Int): Metrics {
+        trainer.calculateConfusionMatrix(flexNet, folding.folds[testFold])
+        return Metrics(
+                flexNet.calculateJ(folding, testFold),
+                trainer.getAccuracy(flexNet),
+                trainer.getPrecision(flexNet),
+                trainer.getRecall(flexNet),
+                0.0,
+                0.0,
+                0.0,
+                0.0
+        )
+    }
 
-        for (testFold in 0 until k) {
-            js.add(flexNet.calculateJ(folding, testFold))
-
-            sumOfJs += js[testFold]
-            trainer.calculateConfusionMatrix(flexNet, folding.folds[testFold])
-
-
-            accuracies.add(trainer.getAccuracy(flexNet))
-            precisions.add(trainer.getPrecision(flexNet))
-            recalls.add(trainer.getRecall(flexNet))
-
-            sumOfAccuracies += trainer.getAccuracy(flexNet)
-            sumOfPrecisions += trainer.getPrecision(flexNet)
-            sumOfRecalls += trainer.getRecall(flexNet)
-        }
-
-        val meanJ = sumOfJs/k
-        val meanAccuracy = sumOfAccuracies/k
-        val meanPrecision = sumOfPrecisions/k
-        val meanRecall = sumOfRecalls/k
-
+    private fun calculateMeanMetrics(metricsList: List<Metrics>): Metrics {
+        var meanJ = 0.0
+        var meanAccuracy = 0.0
+        var meanPrecision = 0.0
+        var meanRecall = 0.0
         var standardDeviationJ = 0.0
         var standardDeviationAccuracy = 0.0
         var standardDeviationPrecision = 0.0
         var standardDeviationRecall = 0.0
 
-        for(i in 0 until js.count()) {
-            standardDeviationJ += Math.pow((js[i]-meanJ), 2.0)
-            standardDeviationAccuracy += Math.pow((accuracies[i]-meanAccuracy), 2.0)
-            standardDeviationPrecision += Math.pow((precisions[i]-meanPrecision), 2.0)
-            standardDeviationRecall += Math.pow((recalls[i]-meanRecall), 2.0)
+        metricsList.forEach {
+            meanJ += it.j/metricsList.size
+            meanAccuracy += it.accuracy/metricsList.size
+            meanPrecision += it.precision/metricsList.size
+            meanRecall += it.recall/metricsList.size
         }
 
-        standardDeviationJ /= (k-1)
-        standardDeviationAccuracy /= (k-1)
-        standardDeviationPrecision /= (k-1)
-        standardDeviationRecall /= (k-1)
+        metricsList.forEach {
+            standardDeviationJ += Math.pow((it.j-meanJ), 2.0)/(metricsList.size-1)
+            standardDeviationAccuracy += Math.pow((it.accuracy-meanAccuracy), 2.0)/(metricsList.size-1)
+            standardDeviationPrecision += Math.pow((it.precision-meanPrecision), 2.0)/(metricsList.size-1)
+            standardDeviationRecall += Math.pow((it.recall-meanRecall), 2.0)/(metricsList.size-1)
+        }
 
         standardDeviationJ = Math.sqrt(standardDeviationJ)
         standardDeviationAccuracy = Math.sqrt(standardDeviationAccuracy)
@@ -147,7 +107,7 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
         )
     }
 
-    fun saveIfGoodConfig(config: FlexNetConfig, metrics: Metrics) {
+    private fun saveIfGoodConfig(config: FlexNetConfig, metrics: Metrics) {
 
         if (bestConfigs.size < MAX_BEST_CONFIGS_LIST_SIZE) { //list of best configs has space
             bestConfigs.add(Pair(config, metrics))
@@ -157,12 +117,12 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
             //find worst config of the best configs
             var worstConfigIndex = 0
             bestConfigs.forEachIndexed { index, pair ->
-                if (pair.second.meanAccuracy < bestConfigs[worstConfigIndex].second.meanAccuracy)
+                if (pair.second.accuracy < bestConfigs[worstConfigIndex].second.accuracy)
                     worstConfigIndex = index
             }
 
             //evaluate if should replace worst config for new one
-            if (metrics.meanAccuracy > bestConfigs[worstConfigIndex].second.meanAccuracy)
+            if (metrics.accuracy > bestConfigs[worstConfigIndex].second.accuracy)
                 bestConfigs[worstConfigIndex] = Pair(config, metrics)
         }
     }
@@ -170,13 +130,13 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
 
 fun main(args : Array<String>) {
     val config = FlexNetConfig(
-            inputNeurons = 9,
-            numberOfTargetAttributeClassesInDataSet = 3,
+            inputNeurons = 30,
+            numberOfTargetAttributeClassesInDataSet = 2,
             hiddenLayers = 1,
             neuronsPerHiddenLayer = 3,
             lambda = 0.00001
     )
-    val cv = CrossValidation("./data/cmc.data", 10, config, 9, false)
+    val cv = CrossValidation("./data/wdbc.data", 10, config, 0, true)
     cv.doCrossValidation()
     println("ok")
 }

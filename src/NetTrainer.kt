@@ -1,19 +1,66 @@
-class NetTrainer(val stepOfJCheck: Int = 50) {
+class NetTrainer(val stepOfJCheck: Int = 50,
+                 private val MAX_TRIES:Int = 10000,
+                 private val MAX_NO_IMPROVEMENT_TRIES: Int = 30,
+                 private val MIN_J_DIFFERENCE_PERCENTAGE:Double = 0.01,
+                 private val MIN_GOOD_J: Double = 0.000065) {
 
-    private val MAX_TRIES = 10000
     var triesCounter: Int = 0
-    private val MAX_NO_IMPROVEMENT_TRIES = 30
     var noImprovementCounter = 0
-    private val MIN_J_DIFFERENCE_PERCENTAGE = 0.01
-    private val MIN_GOOD_J = 0.000065
-
     var confusionMatrix : MutableList<MutableList<Int>> = mutableListOf()
 
     fun resetTriesCounter() {
         triesCounter = 0
     }
 
-    //train
+    /**
+     * Trains a data set and returns if the training is done (true) or should train more (false)
+     */
+    fun trainAndCatalogJ(flexNet: FlexNet, trainingInstances: List<Instance>, testInstances: List<Instance>,
+                         points: MutableList<Pair<Double, Double>>): Boolean {
+        var previousJ: Double
+        var newJ: Double
+
+        //separate instances in (trainingInstances.size/stepOfJCheck) small batches
+        (0 until (trainingInstances.size/stepOfJCheck)).forEach {
+            //train batch
+            previousJ = flexNet.calculateJ(testInstances)
+            val batch = buildBatch(trainingInstances, it)
+            trainBatch(flexNet, batch)
+            newJ = flexNet.calculateJ(testInstances)
+
+            //catalogs J and number of instances trained
+            if (points.isEmpty()) {
+                points.add(Pair(batch.size.toDouble(), newJ))
+            } else {
+                points.add(Pair(points.last().first + stepOfJCheck, newJ))
+                println(Pair(points.last().first + stepOfJCheck, newJ))
+            }
+
+            //after each batch is trained, checks if should end training
+            if (shouldEndTraining(previousJ, newJ)) return true
+        }
+
+        //trains rest of instances that didn't fit in batches (if there is any)
+        if (trainingInstances.size % stepOfJCheck != 0) {
+            val remainingBatch = trainingInstances.subList(trainingInstances.size - (trainingInstances.size % stepOfJCheck), trainingInstances.size)
+            if (remainingBatch.isNotEmpty()) {
+                previousJ = flexNet.calculateJ(testInstances)
+                trainBatch(flexNet, remainingBatch)
+                newJ = flexNet.calculateJ(testInstances)
+
+                //catalogs J and number of instances trained
+                points.add(Pair(points.last().first + stepOfJCheck, newJ))
+                println(Pair(points.last().first + stepOfJCheck, newJ))
+
+                //after rest of instances are trained, checks if should end training
+                if (shouldEndTraining(previousJ, newJ)) return true
+            }
+        }
+
+        //should train more, training is not done and training set was fully used
+        return false
+    }
+
     /**
      * Trains a data set and returns if the training is done (true) or should train more (false)
      */

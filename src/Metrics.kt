@@ -1,8 +1,8 @@
 data class Metrics(
-            val meanJ : Double,
-            val meanAccuracy : Double,
-            val meanPrecision : Double,
-            val meanRecall : Double,
+            val j : Double,
+            val accuracy : Double,
+            val precision : Double,
+            val recall : Double,
             val standardDeviationJ : Double,
             val standardDeviationAccuracy : Double,
             val standardDeviationPrecision : Double,
