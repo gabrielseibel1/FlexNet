@@ -53,15 +53,15 @@ class NetTrainer(val stepOfJCheck: Int = 50) {
     /**
      * Trains a data set and returns if the training is done (true) or should train more (false)
      */
-    fun trainFolding(flexNet: FlexNet, folding: Folding, testFold: Int) : Boolean {
+    fun trainFolding(flexNet: FlexNet, folding: Folding, testFoldIndex: Int) : Boolean {
 
         //add instances from training folds to one big list of instances called trainingInstances
-        val trainingFolds = folding.folds.filterIndexed{ index, _ -> index != testFold }
+        val trainingFolds = folding.folds.filterIndexed{ index, _ -> index != testFoldIndex }
         val trainingInstances = mutableListOf<Instance>()
         trainingFolds.forEach { it.dataSet.forEach { trainingInstances.add(it) } }
 
         //add instances from testing fold to one big list of instances called testingInstances
-        val testFold = folding.folds[testFold]
+        val testFold = folding.folds[testFoldIndex]
         val testingInstances = mutableListOf<Instance>()
         testFold.dataSet.forEach { testingInstances.add(it) }
 
