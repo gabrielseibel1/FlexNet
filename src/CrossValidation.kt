@@ -14,7 +14,7 @@ class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfi
                 for(lambda in 1..5) {
                     config.lambda = lambda/1000.0
                     for(alpha in 1..10) {
-                        config.alpha = alpha/1000.0
+                        config.alpha = alpha/100.0
 
                         println("\n\n//////////////////// CONFIG ////////////////////")
                         println(config)
