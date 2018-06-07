@@ -43,6 +43,6 @@ class DataReader (val file : String, targetPosition : Int, hasId : Boolean) {
 }
 
 fun main(args : Array<String>) {
-    val dataReader : DataReader = DataReader("./data/haberman.data", 3, true)
+    val dataReader : DataReader = DataReader("./data/haberman_fn.data", 3, true)
     println(dataReader)
 }

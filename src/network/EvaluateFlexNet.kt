@@ -11,7 +11,7 @@ fun main(args: Array<String>) {
             alpha = 0.01
     )
 
-    val dr = DataReader("./data/wine.data", targetPosition = 0, hasId = false)
+    val dr = DataReader("./data/wine_fn.data", targetPosition = 0, hasId = false)
     //stop criteria checked every instance
     val trainer = NetTrainer(stepOfJCheck = 1, MIN_J_DIFFERENCE_PERCENTAGE = 0.00001, MAX_TRIES = 200000)
 

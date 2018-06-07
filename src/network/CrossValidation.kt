@@ -138,7 +138,7 @@ fun main(args : Array<String>) {
             neuronsPerHiddenLayer = 3,
             lambda = 0.00001
     )
-    val cv = CrossValidation("./data/wdbc.data", 10, config, 0, true)
+    val cv = CrossValidation("./data/wdbc_fn.data", 10, config, 0, true)
     cv.doCrossValidation()
     println("ok")
 }
