@@ -1,6 +1,6 @@
 package network
 
-class Benchmark (val k : Int) {
+class FlexNetBenchmark (val k : Int) {
     private val trainer = NetTrainer(MAX_TRIES = 1000)
 
     fun run() {
@@ -146,6 +146,6 @@ class Benchmark (val k : Int) {
 }
 
 fun main(args : Array<String>) {
-    val bench = Benchmark(10)
+    val bench = FlexNetBenchmark(10)
     bench.run()
 }
