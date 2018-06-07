@@ -68,9 +68,6 @@ class Benchmark (val k : Int) {
             val dr = DataReader(fileName, targetPosition, hasId)
             val folding = Folding(dr.trainingDataSet, k)
 
-            println("\n\n//////////////////// CONFIG ////////////////////")
-            println(config)
-
             val metricsList = mutableListOf<Metrics>()
             for (testFold in 0 until k) {
                 trainer.resetTriesCounter()
@@ -85,8 +82,9 @@ class Benchmark (val k : Int) {
             //take mean and std dev of metrics
             val meanMetrics = calculateMeanMetrics(metricsList.toList())
 
-            println("Mean cost (J) = ${meanMetrics.j}")
-            println("Mean accuracy = ${meanMetrics.accuracy}")
+
+            println("$fileName { hl = ${config.hiddenLayers}, n/hl = ${config.neuronsPerHiddenLayer}, " +
+                    "l = ${config.lambda}, a = ${config.alpha} } -> Acc = ${meanMetrics.accuracy}")
         }
     }
 

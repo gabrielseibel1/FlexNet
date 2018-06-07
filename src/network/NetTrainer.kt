@@ -29,7 +29,7 @@ class NetTrainer(val stepOfJCheck: Int = 50,
             val batch = buildBatch(trainingInstances, it)
             trainBatch(flexNet, batch)
             newJ = flexNet.calculateJ(testInstances)
-            println("Count: $it | J: $newJ")
+            //println("Count: $it | J: $newJ")
 
             //catalogs J and number of instances trained
             if (points.isEmpty()) {
@@ -54,7 +54,7 @@ class NetTrainer(val stepOfJCheck: Int = 50,
 
                 //catalogs J and number of instances trained
                 points.add(Pair(points.last().first + stepOfJCheck, newJ))
-                println(Pair(points.last().first + stepOfJCheck, newJ))
+                //println(Pair(points.last().first + stepOfJCheck, newJ))
 
                 //after rest of instances are trained, checks if should end training
                 if (shouldEndTraining(previousJ, newJ)) return true
@@ -147,14 +147,14 @@ class NetTrainer(val stepOfJCheck: Int = 50,
             noImprovementCounter = 0
 
         return if (noImprovementCounter >= MAX_NO_IMPROVEMENT_TRIES) {
-            println("Training stopped: low J difference percentage (${Math.abs((previousJ - newJ)/previousJ)})")
+            //println("Training stopped: low J difference percentage (${Math.abs((previousJ - newJ)/previousJ)})")
             true
         } else false
     }
 
     private fun isJGoodEnough(newJ: Double): Boolean {
         return if (newJ <= MIN_GOOD_J) {
-            println("Training stopped: found good J ($newJ)")
+            //println("Training stopped: found good J ($newJ)")
             true
         } else false
     }
@@ -162,7 +162,7 @@ class NetTrainer(val stepOfJCheck: Int = 50,
     private fun triedEnoughTimes(): Boolean {
         triesCounter++
         if (triesCounter >= MAX_TRIES) {
-            println("Training stopped: took too many tries ($triesCounter)")
+            //println("Training stopped: took too many tries ($triesCounter)")
             return true
         } else
             return false
