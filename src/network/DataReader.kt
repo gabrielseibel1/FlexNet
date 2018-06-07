@@ -1,11 +1,11 @@
 package network
 
-import java.io.File
 import java.util.*
 
-class DataReader (val file : String, targetPosition : Int, hasId : Boolean) {
+class DataReader (file : String, targetPosition : Int, hasId : Boolean) {
 
-    private val dataString : String = File(file).readText()
+    private val inputStream = javaClass.classLoader.getResourceAsStream(file)
+    private val dataString: String = convertStreamToString(inputStream)
     val dataSet : MutableList<List<String>> = mutableListOf()
     val dataSetNormalized : MutableList<Instance> = mutableListOf()
     val trainingDataSet : MutableList<Instance> = mutableListOf()
@@ -40,9 +40,14 @@ class DataReader (val file : String, targetPosition : Int, hasId : Boolean) {
             }
         }
     }
+
+    private fun convertStreamToString(inputStream: java.io.InputStream): String {
+        val s = java.util.Scanner(inputStream).useDelimiter("\\A")
+        return if (s.hasNext()) s.next() else ""
+    }
 }
 
 fun main(args : Array<String>) {
-    val dataReader : DataReader = DataReader("./data/haberman_fn.data", 3, true)
+    val dataReader = DataReader("./data/haberman_fn.data", 3, true)
     println(dataReader)
 }
