@@ -1,3 +1,5 @@
+package network
+
 class NetTrainer(val stepOfJCheck: Int = 50,
                  private val MAX_TRIES:Int = 10000,
                  private val MAX_NO_IMPROVEMENT_TRIES: Int = 30,

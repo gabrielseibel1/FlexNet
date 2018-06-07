@@ -1,3 +1,5 @@
+package network
+
 fun main(args: Array<String>) {
 
     val config = FlexNetConfig(

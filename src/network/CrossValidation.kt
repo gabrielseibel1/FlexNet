@@ -1,3 +1,5 @@
+package network
+
 class CrossValidation (dataFile : String, val k : Int, val config : FlexNetConfig, targetPosition : Int, hasId : Boolean) {
 
     private val dr = DataReader(dataFile, targetPosition, hasId)

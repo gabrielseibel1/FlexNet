@@ -1,3 +1,5 @@
+package network
+
 class FlexNetVerifier {
 
     private val config = FlexNetConfig(

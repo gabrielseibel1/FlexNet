@@ -1,3 +1,5 @@
+package network
+
 class Layer (size: Int, thetasPerNeuron: Int, val isInputLayer: Boolean = false, val isOutputLayer: Boolean = false) {
 
     val neurons: List<Neuron>
@@ -84,6 +86,6 @@ class Layer (size: Int, thetasPerNeuron: Int, val isInputLayer: Boolean = false,
     }
 
     override fun toString(): String = buildString {
-        append("Layer(size: ${neurons.size}, neurons: ${neurons.joinToString(prefix = "{", postfix = "}")} )")
+        append("network.Layer(size: ${neurons.size}, neurons: ${neurons.joinToString(prefix = "{", postfix = "}")} )")
     }
 }

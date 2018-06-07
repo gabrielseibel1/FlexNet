@@ -1,3 +1,5 @@
+package network
+
 data class Metrics(
             val j : Double,
             val accuracy : Double,

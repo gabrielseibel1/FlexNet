@@ -1,3 +1,5 @@
+package network
+
 class FlexNet (private val config : FlexNetConfig) {
 
     private val inputLayer : Layer = Layer(config.inputNeurons, 0, isInputLayer = true)

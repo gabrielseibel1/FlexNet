@@ -1,3 +1,5 @@
+package network
+
 class FeaturesNormalizer (private val targetPosition : Int) {
 
     private val targetAttributesKnown : MapOfTargetAttributes = MapOfTargetAttributes(targetAttributesKnown = mutableMapOf())
@@ -11,10 +13,10 @@ class FeaturesNormalizer (private val targetPosition : Int) {
 
         for(i in 1..auxDataSet.count()) {
             dataSetNormalized.add(Instance(
-                                    attributes = mutableListOf(),
-                                    targetAttribute = "",
-                                    targetAttributeNeuron = 0
-                                ))
+                    attributes = mutableListOf(),
+                    targetAttribute = "",
+                    targetAttributeNeuron = 0
+            ))
         }
 
         for(feature in 1..auxDataSet[0].attributes.count()) {

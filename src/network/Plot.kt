@@ -1,11 +1,13 @@
+package network
+
 import org.math.plot.*
 import javax.swing.JFrame
 
-class Plot(x: DoubleArray, y: DoubleArray, private val title: String = "A Plot") {
+class Plot(x: DoubleArray, y: DoubleArray, private val title: String = "A network.Plot") {
 
     private val plot = Plot2DPanel()
 
-    constructor(points: MutableList<Pair<Double, Double>>, title: String = "A Plot"):
+    constructor(points: MutableList<Pair<Double, Double>>, title: String = "A network.Plot"):
             this(x = points.getXDoubleArray(), y = points.getYDoubleArray(), title = title)
 
     init {

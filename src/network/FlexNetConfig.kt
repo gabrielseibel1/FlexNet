@@ -1,3 +1,5 @@
+package network
+
 data class FlexNetConfig (
         var hiddenLayers: Int,
         var neuronsPerHiddenLayer: Int,

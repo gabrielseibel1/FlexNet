@@ -1,3 +1,5 @@
+package network
+
 data class MapOfTargetAttributes (var targetAttributesKnown : MutableMap<String, Int>) {
     var lastAttributeValue = 0
 

@@ -1,3 +1,5 @@
+package network
+
 class Folding (val dataSet : MutableList<Instance>, val k : Int) {
 
     val folds : MutableList<Fold> = mutableListOf()

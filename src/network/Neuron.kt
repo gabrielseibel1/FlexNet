@@ -1,3 +1,5 @@
+package network
+
 import java.util.*
 
 class Neuron (thetaCount: Int){
@@ -7,7 +9,7 @@ class Neuron (thetaCount: Int){
     var delta: Double = 0.0
 
     init {
-        //thetas random initialization
+        //thetas network.random initialization
         for (index in 1..thetaCount) {
             thetas.add((-10..10).random().toDouble())
         }
@@ -45,7 +47,7 @@ class Neuron (thetaCount: Int){
     }
 
     override fun toString(): String = buildString {
-        append("Neuron{")
+        append("network.Neuron{")
         append(" thetas: ${thetas.joinToString(prefix = "{", postfix = "}")},")
         append(" activation: $activation,")
         append(" delta: $delta }")
