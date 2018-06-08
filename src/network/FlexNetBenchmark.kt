@@ -1,6 +1,6 @@
 package network
 
-class FlexNetBenchmark (val k : Int) {
+class FlexNetBenchmark (val k : Int, private val datasetPercentage: DatasetPercentage) {
     private val trainer = NetTrainer(MAX_TRIES = 1000)
 
     fun run() {
@@ -10,9 +10,17 @@ class FlexNetBenchmark (val k : Int) {
         var hasId = false
 
         for (i in 1..4) {
-            when (i) { //choose file and configuration
+            //choose file suffix based on data set percentage
+            val fileSuffix = when (datasetPercentage) {
+                DatasetPercentage.PCT100 -> "_100pct_fn.data"
+                DatasetPercentage.PCT75 -> "_75pct_fn.data"
+                DatasetPercentage.PCT50 -> "_50pct_fn.data"
+                DatasetPercentage.PCT25 -> "_25pct_fn.data"
+            }
+
+            when (i) { //choose dataset and forest configuration
                 1 -> {
-                    fileName = "wine_fn.data"
+                    fileName = "wine/wine$fileSuffix"
                     config = FlexNetConfig(
                             hiddenLayers = 1,
                             neuronsPerHiddenLayer = 4,
@@ -25,7 +33,7 @@ class FlexNetBenchmark (val k : Int) {
                     hasId = false
                 }
                 2 -> {
-                    fileName = "haberman_fn.data"
+                    fileName = "haberman/haberman$fileSuffix"
                     config = FlexNetConfig(
                             hiddenLayers = 2,
                             neuronsPerHiddenLayer = 4,
@@ -38,7 +46,7 @@ class FlexNetBenchmark (val k : Int) {
                     hasId = false
                 }
                 3 -> {
-                    fileName = "cmc_fn.data"
+                    fileName = "cmc/cmc$fileSuffix"
                     config = FlexNetConfig(
                             hiddenLayers = 1,
                             neuronsPerHiddenLayer = 4,
@@ -51,7 +59,7 @@ class FlexNetBenchmark (val k : Int) {
                     hasId = false
                 }
                 4 -> {
-                    fileName = "wdbc_fn.data"
+                    fileName = "wdbc/wdbc$fileSuffix"
                     config = FlexNetConfig(
                             hiddenLayers = 2,
                             neuronsPerHiddenLayer = 4,
@@ -104,33 +112,11 @@ class FlexNetBenchmark (val k : Int) {
 
     private fun calculateMeanMetrics(metricsList: List<Metrics>): Metrics {
         var meanAccuracy = 0.0
-        /*var standardDeviationAccuracy = 0.0
-        var meanJ = 0.0
-        var meanPrecision = 0.0
-        var meanRecall = 0.0
-        var standardDeviationJ = 0.0
-        var standardDeviationPrecision = 0.0
-        var standardDeviationRecall = 0.0*/
 
         metricsList.forEach {
-            //meanJ += it.j/metricsList.size
             meanAccuracy += it.accuracy
-            //meanPrecision += it.precision/metricsList.size
-            //meanRecall += it.recall/metricsList.size
         }
         meanAccuracy /= metricsList.size
-
-        /*metricsList.forEach {
-            standardDeviationAccuracy += Math.pow((it.accuracy-meanAccuracy), 2.0)/(metricsList.size-1)
-            standardDeviationJ += Math.pow((it.j-meanJ), 2.0)/(metricsList.size-1)
-            standardDeviationPrecision += Math.pow((it.precision-meanPrecision), 2.0)/(metricsList.size-1)
-            standardDeviationRecall += Math.pow((it.recall-meanRecall), 2.0)/(metricsList.size-1)
-        }*/
-
-        /*standardDeviationAccuracy = Math.sqrt(standardDeviationAccuracy)
-        standardDeviationJ = Math.sqrt(standardDeviationJ)
-        standardDeviationPrecision = Math.sqrt(standardDeviationPrecision)
-        standardDeviationRecall = Math.sqrt(standardDeviationRecall)*/
 
         return Metrics(
                 0.0,
@@ -145,7 +131,11 @@ class FlexNetBenchmark (val k : Int) {
     }
 }
 
+enum class DatasetPercentage {
+    PCT100, PCT75, PCT50, PCT25
+}
+
 fun main(args : Array<String>) {
-    val bench = FlexNetBenchmark(10)
+    val bench = FlexNetBenchmark(10, datasetPercentage = DatasetPercentage.PCT100)
     bench.run()
 }
